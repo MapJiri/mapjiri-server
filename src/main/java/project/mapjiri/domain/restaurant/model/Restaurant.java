@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import project.mapjiri.domain.menu.model.Menu;
 import project.mapjiri.domain.place.model.Place;
+import project.mapjiri.domain.review.model.ReviewTag;
 
 
 import static jakarta.persistence.GenerationType.IDENTITY;
