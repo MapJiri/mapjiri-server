@@ -20,6 +20,6 @@ public class Place {
     private String dong;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "placeStarId")
+    @JoinColumn(name = "place_star_id")
     private PlaceStar restaurants;
 }

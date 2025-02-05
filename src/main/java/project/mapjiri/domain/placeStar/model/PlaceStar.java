@@ -17,6 +17,6 @@ public class PlaceStar {
     private Long placeStarId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "userId")
+    @JoinColumn(name = "user_id")
     private User user;
 }

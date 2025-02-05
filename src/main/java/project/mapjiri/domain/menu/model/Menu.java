@@ -23,6 +23,6 @@ public class Menu {
     private String menuName;
 
     @OneToOne(fetch = LAZY)
-    @JoinColumn(name = "menuStarId")
+    @JoinColumn(name = "menu_star_id")
     private MenuStar menuStar;
 }

@@ -41,9 +41,10 @@ public class Restaurant {
     private Double restaurantLatitude;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "menuId")
+    @JoinColumn(name = "menu_id")
     private Menu menu;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "place_id")
     private Place place;
 }

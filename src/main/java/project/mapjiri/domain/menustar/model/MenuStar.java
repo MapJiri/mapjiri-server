@@ -17,7 +17,7 @@ public class MenuStar {
     private Long menuStarId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "userId")
+    @JoinColumn(name = "user_id")
     private User user;
 
 }
