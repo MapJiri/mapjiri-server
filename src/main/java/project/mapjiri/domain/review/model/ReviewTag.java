@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Getter
@@ -30,18 +31,17 @@ public enum ReviewTag {
                 .orElse(UNKNOWN); // 기본값: 최신순 정렬
     }
 
-    public static ReviewTag findMostFrequentTag(String[] reviewTags) {
+    public static ReviewTag findMostFrequentTag(List<ReviewTag> reviewTags) {
         Map<ReviewTag, Integer> tagCountMap = countTagFrom(reviewTags);
 
         return getTopReviewTag(tagCountMap);
     }
 
-    private static Map<ReviewTag, Integer> countTagFrom(String[] reviewTags) {
+    private static Map<ReviewTag, Integer> countTagFrom(List<ReviewTag> reviewTags) {
         Map<ReviewTag, Integer> tagCountMap = new HashMap<>();
 
-        for (String reviewTag : reviewTags) {
-            ReviewTag tag = ReviewTag.fromString(reviewTag);
-            tagCountMap.put(tag, tagCountMap.getOrDefault(tag, 0) + 1);
+        for (ReviewTag reviewTag : reviewTags) {
+            tagCountMap.put(reviewTag, tagCountMap.getOrDefault(reviewTag, 0) + 1);
         }
         return tagCountMap;
     }
