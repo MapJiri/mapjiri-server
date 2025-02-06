@@ -34,9 +34,8 @@ class ReviewServiceImplTest {
     @TestFactory
     Collection<DynamicTest> getReviewsByRestaurant() {
         // given
-        Restaurant restaurant1 = new Restaurant("식당1", "구주소1", "신주소1", "번호1", ReviewTag.GO, 0.1, 0.1);
-        Restaurant restaurant2 = new Restaurant("식당2", "구주소2", "신주소2", "번호2", ReviewTag.GO, 0.1, 0.2);
-        restaurantRepository.saveAllAndFlush(List.of(restaurant1, restaurant2));
+        Restaurant restaurant1 = new Restaurant("식당1", "구주소1", "신주소1", "번호1", ReviewTag.TASTE, 0.1, 0.1);
+        restaurantRepository.saveAndFlush(restaurant1);
 
         List<Review> reviews = new ArrayList<>();
         for (int per = 1; per <= 20; per++) {

@@ -35,7 +35,7 @@ public class Restaurant {
     private String restaurantNumber;
 
     @Column(nullable = false)
-    private ReviewTag reviewTag;
+    private ReviewTag topReviewTag;
 
     @Column(nullable = false)
     private Double restaurantLongitude;
@@ -56,7 +56,7 @@ public class Restaurant {
         this.restaurantOldPlace = restaurantOldPlace;
         this.restaurantNewPlace = restaurantNewPlace;
         this.restaurantNumber = restaurantNumber;
-        this.reviewTag = reviewTag;
+        this.topReviewTag = reviewTag;
         this.restaurantLongitude = restaurantLongitude;
         this.restaurantLatitude = restaurantLatitude;
     }
