@@ -34,4 +34,15 @@ public class Review {
     @JoinColumn(name = "restaurant_id")
     private Restaurant restaurant;
 
+    private Review(String reviewContent, int reviewPoint, LocalDate date, String reviewImageUrl, Restaurant restaurant) {
+        this.reviewContent = reviewContent;
+        this.reviewPoint = reviewPoint;
+        this.date = date;
+        this.reviewImageUrl = reviewImageUrl;
+        this.restaurant = restaurant;
+    }
+
+    public static Review of(String reviewContent, int reviewPoint, LocalDate date, String reviewImageUrl, Restaurant restaurant) {
+        return new Review(reviewContent, reviewPoint, date, reviewImageUrl, restaurant);
+    }
 }
