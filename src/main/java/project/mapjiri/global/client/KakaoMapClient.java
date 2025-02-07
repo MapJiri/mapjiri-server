@@ -6,15 +6,19 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.util.UriComponentsBuilder;
 import project.mapjiri.global.client.dto.KakaoAddressResponseDto;
+import project.mapjiri.global.client.dto.KakaoNearbyRestaurantResponseDto;
 import project.mapjiri.global.exception.MyErrorCode;
 import project.mapjiri.global.exception.MyException;
 
+import java.util.ArrayList;
+import java.util.List;
 
 @Slf4j
 @Component
 public class KakaoMapClient {
 
     private final RestClient restClient;
+    private static final int MAX_PAGE = 2; // 페이지 당 15개의 가게, 즉 최대 30개의 가까운 가게만 조회
 
     public KakaoMapClient(RestClient kakaoRestClient) {
         this.restClient = kakaoRestClient;
@@ -28,6 +32,56 @@ public class KakaoMapClient {
                 .toUriString();
         return sendGetRequest(uri).body(KakaoAddressResponseDto.class);
     }
+
+
+    public List<KakaoNearbyRestaurantResponseDto.Documents> findNearbyRestaurants(Double longitude, Double latitude) {
+        List<KakaoNearbyRestaurantResponseDto.Documents> allRestaurants = new ArrayList<>();
+
+        for (int page = 1; page <= MAX_PAGE; page++) {
+            String uri = UriComponentsBuilder.fromPath("/search/category.json")
+                    .queryParam("category_group_code", "FD6")
+                    .queryParam("radius", 200)
+                    .queryParam("x", longitude)
+                    .queryParam("y", latitude)
+                    .queryParam("page", page)
+                    .toUriString();
+            KakaoNearbyRestaurantResponseDto response = sendGetRequest(uri).body(KakaoNearbyRestaurantResponseDto.class);
+            if (response == null || response.getDocuments() == null) {
+                break;
+            }
+            allRestaurants.addAll(response.getDocuments());
+            if (response.getMeta().isInEnd()) {
+                break;
+            }
+        }
+        return allRestaurants;
+    }
+
+
+    public List<KakaoNearbyRestaurantResponseDto.Documents> findNearbyRestaurantsByKeyword(Double longitude, Double latitude, String keyword) {
+        List<KakaoNearbyRestaurantResponseDto.Documents> allRestaurants = new ArrayList<>();
+
+        for (int page = 1; page <= MAX_PAGE; page++) {
+            String uri = UriComponentsBuilder.fromPath("/search/keyword.json")
+                    .queryParam("query", keyword)
+                    .queryParam("category_group_code", "FD6")
+                    .queryParam("radius", 400)
+                    .queryParam("x", longitude)
+                    .queryParam("y", latitude)
+                    .queryParam("page", page)
+                    .toUriString();
+            KakaoNearbyRestaurantResponseDto response = sendGetRequest(uri).body(KakaoNearbyRestaurantResponseDto.class);
+            if (response == null || response.getDocuments() == null) {
+                break;
+            }
+            allRestaurants.addAll(response.getDocuments());
+            if (response.getMeta().isInEnd()) {
+                break;
+            }
+        }
+        return allRestaurants;
+    }
+
 
     private RestClient.ResponseSpec sendGetRequest(String uri) {
         return restClient.get()
