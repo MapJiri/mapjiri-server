@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.client.MockRestServiceServer;
 import org.springframework.web.client.RestClient;
-import project.mapjiri.global.client.dto.KakaoAddressResponseDto;
+import project.mapjiri.domain.place.dto.AddressResponseDto;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.queryParam;
@@ -32,35 +32,37 @@ class KakaoMapClientTest {
     @Test
     void 좌표를_주소로_변환한다() {
         //given
-        String kakaoResponse = "{\n" +
-                "    \"meta\": {\n" +
-                "        \"total_count\": 2\n" +
-                "    },\n" +
-                "    \"documents\": [\n" +
-                "        {\n" +
-                "            \"region_type\": \"B\",\n" +
-                "            \"code\": \"3020011700\",\n" +
-                "            \"address_name\": \"대전광역시 유성구 장대동\",\n" +
-                "            \"region_1depth_name\": \"대전광역시\",\n" +
-                "            \"region_2depth_name\": \"유성구\",\n" +
-                "            \"region_3depth_name\": \"장대동\",\n" +
-                "            \"region_4depth_name\": \"\",\n" +
-                "            \"x\": 127.33212878811635,\n" +
-                "            \"y\": 36.36239066685866\n" +
-                "        },\n" +
-                "        {\n" +
-                "            \"region_type\": \"H\",\n" +
-                "            \"code\": \"3020054000\",\n" +
-                "            \"address_name\": \"대전광역시 유성구 온천2동\",\n" +
-                "            \"region_1depth_name\": \"대전광역시\",\n" +
-                "            \"region_2depth_name\": \"유성구\",\n" +
-                "            \"region_3depth_name\": \"온천2동\",\n" +
-                "            \"region_4depth_name\": \"\",\n" +
-                "            \"x\": 127.33338051944209,\n" +
-                "            \"y\": 36.365375474818876\n" +
-                "        }\n" +
-                "    ]\n" +
-                "}";
+        String kakaoResponse = """
+                {
+                    "meta": {
+                        "total_count": 2
+                    },
+                    "documents": [
+                        {
+                            "region_type": "B",
+                            "code": "3020011700",
+                            "address_name": "대전광역시 유성구 장대동",
+                            "region_1depth_name": "대전광역시",
+                            "region_2depth_name": "유성구",
+                            "region_3depth_name": "장대동",
+                            "region_4depth_name": "",
+                            "x": 127.33212878811635,
+                            "y": 36.36239066685866
+                        },
+                        {
+                            "region_type": "H",
+                            "code": "3020054000",
+                            "address_name": "대전광역시 유성구 온천2동",
+                            "region_1depth_name": "대전광역시",
+                            "region_2depth_name": "유성구",
+                            "region_3depth_name": "온천2동",
+                            "region_4depth_name": "",
+                            "x": 127.33338051944209,
+                            "y": 36.365375474818876
+                        }
+                    ]
+                }
+                """;
 
         mockRestServiceServer.expect(requestTo(KAKAO_BASE_URL + "/geo/coord2regioncode.json?x=" + TEST_LONGITUDE + "&y=" + TEST_LATITUDE))
                 .andExpect(queryParam("x", TEST_LONGITUDE.toString()))
@@ -68,18 +70,16 @@ class KakaoMapClientTest {
                 .andRespond(withSuccess(kakaoResponse, MediaType.APPLICATION_JSON));
 
         //when
-        KakaoAddressResponseDto responseDto = kakaoMapClient.getAddressFromCoordinate(TEST_LONGITUDE, TEST_LATITUDE);
+        AddressResponseDto addressResponseDto = kakaoMapClient.getAddressFromCoordinate(TEST_LONGITUDE, TEST_LATITUDE);
 
         //then
         assertAll(
-                () -> assertNotNull(responseDto),
-                () -> assertFalse(responseDto.getDocuments().isEmpty()),
-                () -> assertThat(responseDto.getDocuments().get(1).getRegionType()).isEqualTo("H"),
-                () -> assertThat(responseDto.getDocuments().get(1).getAddressName()).isEqualTo("대전광역시 유성구 온천2동"),
-                () -> assertThat(responseDto.getDocuments().get(1).getGu()).isEqualTo("유성구"),
-                () -> assertThat(responseDto.getDocuments().get(1).getDong()).isEqualTo("온천2동"),
-                () -> assertThat(responseDto.getDocuments().get(1).getLongitude()).isEqualTo(127.33338051944209),
-                () -> assertThat(responseDto.getDocuments().get(1).getLatitude()).isEqualTo(36.365375474818876)
+                () -> assertNotNull(addressResponseDto),
+                () -> assertThat(addressResponseDto.getAddress()).isEqualTo("대전광역시 유성구 온천2동"),
+                () -> assertThat(addressResponseDto.getGu()).isEqualTo("유성구"),
+                () -> assertThat(addressResponseDto.getDong()).isEqualTo("온천2동"),
+                () -> assertThat(addressResponseDto.getLongitude()).isEqualTo(127.33338051944209),
+                () -> assertThat(addressResponseDto.getLatitude()).isEqualTo(36.365375474818876)
         );
         mockRestServiceServer.verify();
     }

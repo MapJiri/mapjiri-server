@@ -5,6 +5,8 @@ import org.springframework.http.*;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.util.UriComponentsBuilder;
+import project.mapjiri.domain.place.dto.AddressResponseDto;
+import project.mapjiri.domain.restaurant.dto.NearbyRestaurantsResponseDto;
 import project.mapjiri.global.client.dto.KakaoAddressResponseDto;
 import project.mapjiri.global.client.dto.KakaoNearbyRestaurantResponseDto;
 import project.mapjiri.global.exception.MyErrorCode;
@@ -25,16 +27,17 @@ public class KakaoMapClient {
     }
 
 
-    public KakaoAddressResponseDto getAddressFromCoordinate(Double longitude, Double latitude) {
+    public AddressResponseDto getAddressFromCoordinate(Double longitude, Double latitude) {
         String uri = UriComponentsBuilder.fromPath("/geo/coord2regioncode.json")
                 .queryParam("x", longitude)
                 .queryParam("y", latitude)
                 .toUriString();
-        return sendGetRequest(uri).body(KakaoAddressResponseDto.class);
+        KakaoAddressResponseDto response = sendGetRequest(uri).body(KakaoAddressResponseDto.class);
+        return AddressResponseDto.from(response);
     }
 
 
-    public List<KakaoNearbyRestaurantResponseDto.Documents> findNearbyRestaurants(Double longitude, Double latitude) {
+    public NearbyRestaurantsResponseDto findNearbyRestaurants(Double longitude, Double latitude) {
         List<KakaoNearbyRestaurantResponseDto.Documents> allRestaurants = new ArrayList<>();
 
         for (int page = 1; page <= MAX_PAGE; page++) {
@@ -54,11 +57,11 @@ public class KakaoMapClient {
                 break;
             }
         }
-        return allRestaurants;
+        return NearbyRestaurantsResponseDto.from(allRestaurants);
     }
 
 
-    public List<KakaoNearbyRestaurantResponseDto.Documents> findNearbyRestaurantsByKeyword(Double longitude, Double latitude, String keyword) {
+    public NearbyRestaurantsResponseDto findNearbyRestaurantsByKeyword(Double longitude, Double latitude, String keyword) {
         List<KakaoNearbyRestaurantResponseDto.Documents> allRestaurants = new ArrayList<>();
 
         for (int page = 1; page <= MAX_PAGE; page++) {
@@ -79,7 +82,7 @@ public class KakaoMapClient {
                 break;
             }
         }
-        return allRestaurants;
+        return NearbyRestaurantsResponseDto.from(allRestaurants);
     }
 
 
