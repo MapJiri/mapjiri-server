@@ -65,9 +65,10 @@ public class KakaoMapClient {
 
     public NearbyRestaurantsResponseDto findNearbyRestaurantsByKeyword(Double longitude, Double latitude, String keyword) {
         List<KakaoNearbyRestaurantResponseDto.Documents> allRestaurants = new ArrayList<>();
+        String encodedKeyword = keyword.replace(" ", "+");
         for (int page = 1; page <= MAX_PAGE; page++) {
             String uri = UriComponentsBuilder.fromPath("/v2/local/search/keyword.json")
-                    .queryParam("query", keyword)
+                    .queryParam("query", encodedKeyword)
                     .queryParam("category_group_code", "FD6")
                     .queryParam("radius", 400)
                     .queryParam("x", longitude)
