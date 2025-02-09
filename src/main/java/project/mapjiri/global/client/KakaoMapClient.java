@@ -28,9 +28,10 @@ public class KakaoMapClient {
 
 
     public AddressResponseDto getAddressFromCoordinate(Double longitude, Double latitude) {
-        String uri = UriComponentsBuilder.fromPath("/geo/coord2regioncode.json")
+        String uri = UriComponentsBuilder.fromPath("/v2/local/geo/coord2regioncode.json")
                 .queryParam("x", longitude)
                 .queryParam("y", latitude)
+                .build()
                 .toUriString();
         KakaoAddressResponseDto response = sendGetRequest(uri).body(KakaoAddressResponseDto.class);
         return AddressResponseDto.from(response);
@@ -41,12 +42,13 @@ public class KakaoMapClient {
         List<KakaoNearbyRestaurantResponseDto.Documents> allRestaurants = new ArrayList<>();
 
         for (int page = 1; page <= MAX_PAGE; page++) {
-            String uri = UriComponentsBuilder.fromPath("/search/category.json")
+            String uri = UriComponentsBuilder.fromPath("/v2/local/search/category.json")
                     .queryParam("category_group_code", "FD6")
                     .queryParam("radius", 200)
                     .queryParam("x", longitude)
                     .queryParam("y", latitude)
                     .queryParam("page", page)
+                    .build()
                     .toUriString();
             KakaoNearbyRestaurantResponseDto response = sendGetRequest(uri).body(KakaoNearbyRestaurantResponseDto.class);
             if (response == null || response.getDocuments() == null) {
@@ -63,15 +65,15 @@ public class KakaoMapClient {
 
     public NearbyRestaurantsResponseDto findNearbyRestaurantsByKeyword(Double longitude, Double latitude, String keyword) {
         List<KakaoNearbyRestaurantResponseDto.Documents> allRestaurants = new ArrayList<>();
-
         for (int page = 1; page <= MAX_PAGE; page++) {
-            String uri = UriComponentsBuilder.fromPath("/search/keyword.json")
+            String uri = UriComponentsBuilder.fromPath("/v2/local/search/keyword.json")
                     .queryParam("query", keyword)
                     .queryParam("category_group_code", "FD6")
                     .queryParam("radius", 400)
                     .queryParam("x", longitude)
                     .queryParam("y", latitude)
                     .queryParam("page", page)
+                    .build()
                     .toUriString();
             KakaoNearbyRestaurantResponseDto response = sendGetRequest(uri).body(KakaoNearbyRestaurantResponseDto.class);
             if (response == null || response.getDocuments() == null) {

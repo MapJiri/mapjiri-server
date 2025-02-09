@@ -11,7 +11,7 @@ import static org.springframework.http.HttpHeaders.*;
 @Configuration
 public class RestClientConfig {
 
-    private final static String KAKAO_BASE_URI = "https://dapi.kakao.com/v2/local";
+    private final static String KAKAO_BASE_URI = "https://dapi.kakao.com";
 
     @Bean
     public RestClient kakaoRestClient(@Value("${kakao.api.key}") String apiKey) {
