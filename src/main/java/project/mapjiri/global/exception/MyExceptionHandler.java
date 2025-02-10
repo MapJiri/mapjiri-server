@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import project.mapjiri.global.dto.ResponseDto;
 
+import java.net.URISyntaxException;
+
 @Slf4j
 @RestControllerAdvice
 public class MyExceptionHandler {
@@ -42,6 +44,12 @@ public class MyExceptionHandler {
     public ResponseEntity<ResponseDto<Integer>> handleHttpMessageNotReadableException(HttpMessageNotReadableException ex) {
         String errorMessage = "요청한 JSON 데이터를 읽을 수 없습니다: " + ex.getMessage();
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ResponseDto.of(-1,errorMessage));
+    }
+
+    @ExceptionHandler(URISyntaxException.class)
+    public ResponseEntity<ResponseDto<Integer>> handleURISyntaxException(URISyntaxException ex) {
+        String errorMessage = "잘못된 요청 URI 형식입니다: " + ex.getMessage();
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ResponseDto.of(-1, errorMessage));
     }
 
 }
