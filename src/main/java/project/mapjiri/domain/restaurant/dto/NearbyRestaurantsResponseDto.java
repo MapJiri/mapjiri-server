@@ -37,6 +37,7 @@ public class NearbyRestaurantsResponseDto {
         private final String restaurantName;
         private final String address;
         private final String roadAddressName;
+        private final String phoneNumber;
         private final Double longitude;
         private final Double latitude;
 
@@ -44,6 +45,7 @@ public class NearbyRestaurantsResponseDto {
             this.restaurantName = documents.getRestaurantName();
             this.address = documents.getAddress();
             this.roadAddressName = documents.getRoadAddressName();
+            this.phoneNumber = documents.getPhoneNumber();
             this.longitude = documents.getLongitude();
             this.latitude = documents.getLatitude();
         }
