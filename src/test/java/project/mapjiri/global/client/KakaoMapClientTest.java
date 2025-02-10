@@ -558,11 +558,13 @@ class KakaoMapClientTest {
                 () -> assertThat(nearbyRestaurantsResponseDto.getRestaurantLists().get(0).getRestaurantName()).isEqualTo("원조뒷고기"),
                 () -> assertThat(nearbyRestaurantsResponseDto.getRestaurantLists().get(0).getAddress()).isEqualTo("대전 유성구 장대동 280-10"),
                 () -> assertThat(nearbyRestaurantsResponseDto.getRestaurantLists().get(0).getRoadAddressName()).isEqualTo("대전 유성구 장대로 41"),
+                () -> assertThat(nearbyRestaurantsResponseDto.getRestaurantLists().get(0).getPhoneNumber()).isEqualTo("042-822-2667"),
                 () -> assertThat(nearbyRestaurantsResponseDto.getRestaurantLists().get(0).getLongitude()).isEqualTo(127.336150709515),
                 () -> assertThat(nearbyRestaurantsResponseDto.getRestaurantLists().get(0).getLatitude()).isEqualTo( 36.3586773933956),
                 () -> assertThat(nearbyRestaurantsResponseDto.getRestaurantLists().get(29).getRestaurantName()).isEqualTo("한밭추어탕"),
                 () -> assertThat(nearbyRestaurantsResponseDto.getRestaurantLists().get(29).getAddress()).isEqualTo("대전 유성구 장대동 279-1"),
                 () -> assertThat(nearbyRestaurantsResponseDto.getRestaurantLists().get(29).getRoadAddressName()).isEqualTo("대전 유성구 유성대로740번길 38"),
+                () -> assertThat(nearbyRestaurantsResponseDto.getRestaurantLists().get(29).getPhoneNumber()).isEqualTo("042-477-3651"),
                 () -> assertThat(nearbyRestaurantsResponseDto.getRestaurantLists().get(29).getLongitude()).isEqualTo(127.33544260170268),
                 () -> assertThat(nearbyRestaurantsResponseDto.getRestaurantLists().get(29).getLatitude()).isEqualTo(36.35931200826078)
         );
@@ -865,11 +867,13 @@ class KakaoMapClientTest {
                 () -> assertThat(nearbyRestaurantsResponseDto.getRestaurantLists().get(0).getRestaurantName()).isEqualTo("온전히소바"),
                 () -> assertThat(nearbyRestaurantsResponseDto.getRestaurantLists().get(0).getAddress()).isEqualTo("대전 유성구 장대동 281-25"),
                 () -> assertThat(nearbyRestaurantsResponseDto.getRestaurantLists().get(0).getRoadAddressName()).isEqualTo("대전 유성구 문화원로6번길 48-1"),
+                () -> assertThat(nearbyRestaurantsResponseDto.getRestaurantLists().get(0).getPhoneNumber()).isEqualTo("010-2179-0986"),
                 () -> assertThat(nearbyRestaurantsResponseDto.getRestaurantLists().get(0).getLongitude()).isEqualTo(127.33664792211643),
                 () -> assertThat(nearbyRestaurantsResponseDto.getRestaurantLists().get(0).getLatitude()).isEqualTo( 36.35978173518269),
                 () -> assertThat(nearbyRestaurantsResponseDto.getRestaurantLists().get(16).getRestaurantName()).isEqualTo("이것이국밥이다 대전유성점"),
                 () -> assertThat(nearbyRestaurantsResponseDto.getRestaurantLists().get(16).getAddress()).isEqualTo("대전 유성구 장대동 270-5"),
                 () -> assertThat(nearbyRestaurantsResponseDto.getRestaurantLists().get(16).getRoadAddressName()).isEqualTo("대전 유성구 유성대로 757-39"),
+                () -> assertThat(nearbyRestaurantsResponseDto.getRestaurantLists().get(16).getPhoneNumber()).isEqualTo(""),
                 () -> assertThat(nearbyRestaurantsResponseDto.getRestaurantLists().get(16).getLongitude()).isEqualTo(127.334242673825),
                 () -> assertThat(nearbyRestaurantsResponseDto.getRestaurantLists().get(16).getLatitude()).isEqualTo(36.360621173302)
         );

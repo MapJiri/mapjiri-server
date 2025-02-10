@@ -37,6 +37,9 @@ public class KakaoNearbyRestaurantResponseDto {
         @JsonProperty("road_address_name")
         private String roadAddressName;
 
+        @JsonProperty("phone")
+        private String phoneNumber;
+
         @JsonProperty("x")
         private Double longitude;
 
