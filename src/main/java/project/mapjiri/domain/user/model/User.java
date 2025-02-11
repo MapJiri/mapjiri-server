@@ -22,4 +22,10 @@ public class User {
 
     @Column(nullable = false)
     private String username;
+
+    public User(String email, String encodedPassword, String username) {
+        this.email = email;
+        this.password = encodedPassword;
+        this.username = username;
+    }
 }
