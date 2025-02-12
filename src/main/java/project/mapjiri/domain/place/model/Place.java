@@ -19,7 +19,4 @@ public class Place {
     private String gu;
     private String dong;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "place_star_id")
-    private PlaceStar restaurants;
 }
