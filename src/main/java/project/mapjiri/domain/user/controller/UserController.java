@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import project.mapjiri.domain.user.dto.request.SignInRequestDto;
 import project.mapjiri.domain.user.dto.request.SignUpRequestDto;
+import project.mapjiri.domain.user.dto.response.SignInResponseDto;
 import project.mapjiri.domain.user.dto.response.SignUpResponseDto;
 import project.mapjiri.domain.user.service.UserService;
 
@@ -24,5 +25,11 @@ public class UserController {
     public ResponseEntity<SignUpResponseDto> signUp(@RequestBody SignUpRequestDto request) throws AuthenticationException {
         SignUpResponseDto response = userService.signUp(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    @PostMapping("/signin")
+    public ResponseEntity<SignInResponseDto> signIn(@RequestBody SignInRequestDto request) throws AuthenticationException {
+        SignInResponseDto response = userService.signIn(request);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 }
