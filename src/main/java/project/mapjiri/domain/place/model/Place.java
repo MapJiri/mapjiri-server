@@ -1,12 +1,13 @@
 package project.mapjiri.domain.place.model;
 
-import jakarta.persistence.*;
-import lombok.AccessLevel;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import project.mapjiri.domain.placeStar.model.PlaceStar;
 
-import static lombok.AccessLevel.*;
+import static lombok.AccessLevel.PROTECTED;
 
 @Entity
 @Getter

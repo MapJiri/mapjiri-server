@@ -2,14 +2,10 @@ package project.mapjiri.domain.restaurant.model;
 
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import project.mapjiri.domain.menu.model.Menu;
-import project.mapjiri.domain.place.model.Place;
 import project.mapjiri.domain.review.model.ReviewTag;
-
 
 import static jakarta.persistence.GenerationType.IDENTITY;
 import static lombok.AccessLevel.PROTECTED;
