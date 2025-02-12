@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
+import project.mapjiri.domain.user.dto.request.LogoutRequestDto;
 import project.mapjiri.domain.user.dto.request.RefreshAccessTokenRequestDto;
 import project.mapjiri.domain.user.dto.request.SignInRequestDto;
 import project.mapjiri.domain.user.dto.request.SignUpRequestDto;
@@ -80,5 +82,17 @@ public class UserService {
         String newAccessToken = jwtTokenProvider.createAccessToken(email);
 
         return new RefreshAccessTokenResponseDto(newAccessToken, getRefreshToken);
+    }
+
+    public void logout(@RequestBody LogoutRequestDto request) {
+        String refreshToken = request.getRefreshToken();
+        String accessToken = request.getAccessToken();
+
+        // RefreshToken 삭제
+        String email = jwtTokenProvider.getEmailfromToken(refreshToken);
+        redisService.deleteRefreshToken(email);
+
+        // AccessToken 블랙 리스트 추가
+        redisService.addToBlacklist(accessToken);
     }
 }
