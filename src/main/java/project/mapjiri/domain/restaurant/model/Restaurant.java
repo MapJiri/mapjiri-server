@@ -47,10 +47,6 @@ public class Restaurant {
     @JoinColumn(name = "menu_id")
     private Menu menu;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "place_id")
-    private Place place;
-
     public Restaurant(String restaurantName, String restaurantOldPlace, String restaurantNewPlace, String restaurantNumber, ReviewTag reviewTag, Double restaurantLongitude, Double restaurantLatitude) {
         this.restaurantName = restaurantName;
         this.restaurantOldPlace = restaurantOldPlace;
