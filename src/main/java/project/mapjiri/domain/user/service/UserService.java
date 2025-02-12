@@ -4,8 +4,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import project.mapjiri.domain.user.dto.request.RefreshAccessTokenRequestDto;
 import project.mapjiri.domain.user.dto.request.SignInRequestDto;
 import project.mapjiri.domain.user.dto.request.SignUpRequestDto;
+import project.mapjiri.domain.user.dto.response.RefreshAccessTokenResponseDto;
 import project.mapjiri.domain.user.dto.response.SignInResponseDto;
 import project.mapjiri.domain.user.dto.response.SignUpResponseDto;
 import project.mapjiri.domain.user.model.User;
@@ -17,6 +19,7 @@ import project.mapjiri.domain.user.repository.UserRepository;
 public class UserService {
     private final UserRepository userRepository;
     private final JwtTokenProvider jwtTokenProvider;
+    private final RedisService redisService;
 
     private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
@@ -52,9 +55,30 @@ public class UserService {
             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
         }
 
-        String accessToken = jwtTokenProvider.createAccessToken(user.getUserId(), user.getEmail());
-        String refreshToken = jwtTokenProvider.createRefreshToken(user.getUserId());
+        String accessToken = jwtTokenProvider.createAccessToken(user.getEmail());
+        String refreshToken = jwtTokenProvider.createRefreshToken(user.getEmail());
+
+        redisService.setRefreshToken(user.getEmail(), refreshToken);
 
         return new SignInResponseDto(accessToken, refreshToken);
+    }
+
+    public RefreshAccessTokenResponseDto refreshAccessToken(RefreshAccessTokenRequestDto request) {
+        String refreshToken = request.getRefreshToken();
+
+        if (!jwtTokenProvider.validateToken(refreshToken)) {
+            throw new IllegalArgumentException("유효하지 않은 Refresh Token 입니다.");
+        }
+
+        String email = jwtTokenProvider.getEmailfromToken(refreshToken);
+        String getRefreshToken = redisService.getRefreshToken(email);
+
+        if (getRefreshToken == null || !getRefreshToken.equals(refreshToken)) {
+            throw new IllegalArgumentException("이미 만료된 Refresh Token 입니다.");
+        }
+
+        String newAccessToken = jwtTokenProvider.createAccessToken(email);
+
+        return new RefreshAccessTokenResponseDto(newAccessToken, getRefreshToken);
     }
 }
