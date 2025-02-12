@@ -33,4 +33,5 @@ public class MenuStar {
     public static MenuStar of(User user, Menu menu){
         return new MenuStar(user, menu);
     }
+
 }

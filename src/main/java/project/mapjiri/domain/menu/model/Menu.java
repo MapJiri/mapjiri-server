@@ -3,9 +3,7 @@ package project.mapjiri.domain.menu.model;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import project.mapjiri.domain.menustar.model.MenuStar;
 
-import static jakarta.persistence.FetchType.*;
 import static lombok.AccessLevel.PROTECTED;
 
 @Entity
@@ -22,7 +20,4 @@ public class Menu {
     @Column(nullable = false)
     private String menuName;
 
-    @OneToOne(fetch = LAZY)
-    @JoinColumn(name = "menu_star_id")
-    private MenuStar menuStar;
 }
