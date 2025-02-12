@@ -4,15 +4,19 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import project.mapjiri.domain.user.dto.request.SignInRequestDto;
 import project.mapjiri.domain.user.dto.request.SignUpRequestDto;
+import project.mapjiri.domain.user.dto.response.SignInResponseDto;
 import project.mapjiri.domain.user.dto.response.SignUpResponseDto;
 import project.mapjiri.domain.user.model.User;
+import project.mapjiri.domain.user.provider.JwtTokenProvider;
 import project.mapjiri.domain.user.repository.UserRepository;
 
 @Service
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
+    private final JwtTokenProvider jwtTokenProvider;
 
     private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
@@ -34,5 +38,23 @@ public class UserService {
         userRepository.save(user);
 
         return new SignUpResponseDto(user.getEmail(), user.getUsername());
+    }
+
+    public SignInResponseDto signIn(SignInRequestDto request) {
+        User user = userRepository.findByEmail(request.getEmail())
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 이메일입니다."));
+
+        String password = user.getPassword();
+        // 암호화된 비밀번호
+        String encodedPassword = passwordEncoder.encode(password);
+
+        if (!passwordEncoder.matches(password, encodedPassword)) {
+            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+        }
+
+        String accessToken = jwtTokenProvider.createAccessToken(user.getUserId(), user.getEmail());
+        String refreshToken = jwtTokenProvider.createRefreshToken(user.getUserId());
+
+        return new SignInResponseDto(accessToken, refreshToken);
     }
 }
