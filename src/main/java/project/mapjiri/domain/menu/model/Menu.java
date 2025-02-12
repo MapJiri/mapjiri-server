@@ -22,7 +22,4 @@ public class Menu {
     @Column(nullable = false)
     private String menuName;
 
-    @OneToOne(fetch = LAZY)
-    @JoinColumn(name = "menu_star_id")
-    private MenuStar menuStar;
 }
