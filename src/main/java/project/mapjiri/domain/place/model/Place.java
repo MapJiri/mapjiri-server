@@ -1,13 +1,16 @@
 package project.mapjiri.domain.place.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import project.mapjiri.domain.placeStar.model.PlaceStar;
 
-import static lombok.AccessLevel.PROTECTED;
+import java.util.ArrayList;
+import java.util.List;
+
+import static lombok.AccessLevel.*;
 
 @Entity
 @Getter
@@ -19,5 +22,14 @@ public class Place {
 
     private String gu;
     private String dong;
+
+    @OneToMany(mappedBy = "place", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<PlaceStar> placeStars = new ArrayList<>();
+
+    @Builder
+    public Place(String gu, String dong){
+        this.gu = gu;
+        this.dong = dong;
+    }
 
 }
