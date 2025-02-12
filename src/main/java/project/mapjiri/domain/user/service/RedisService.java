@@ -26,4 +26,8 @@ public class RedisService {
     public void deleteRefreshToken(String email) {
         redisTemplate.delete(email);
     }
+
+    public void addToBlacklist(String accessToken) {
+        redisTemplate.opsForValue().set(accessToken, "BLACKLIST", REFRESH_TOKEN_EXPIRATION, TimeUnit.SECONDS);
+    }
 }
