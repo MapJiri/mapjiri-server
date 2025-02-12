@@ -12,7 +12,7 @@ public interface MenuRepository extends JpaRepository<Menu, Long> {
     @Query("SELECT distinct m.menuType FROM Menu m")
     List<String> findDistinctType();
 
-    @Query("SELECT m.menuName FROM Menu m WHERE m.menuType :menuType")
+    @Query("SELECT m.menuName FROM Menu m WHERE m.menuType = :menuType")
     List<String> findNameByType(@Param("menuType") String menuType);
 
     boolean existsByMenuTypeAndMenuName(String menuType, String menuName);
