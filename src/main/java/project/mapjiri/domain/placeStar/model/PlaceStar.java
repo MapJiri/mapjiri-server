@@ -23,4 +23,14 @@ public class PlaceStar {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
+
+    private PlaceStar(User user, Place place){
+        this.user = user;
+        this.place = place;
+    }
+
+    public static PlaceStar of(User user, Place place){
+        return new PlaceStar(user, place);
+    }
+
 }

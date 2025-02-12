@@ -22,7 +22,16 @@ public class MenuStar {
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "menu_id")
     private Menu menu;
+
+    private MenuStar(User user, Menu menu){
+        this.user = user;
+        this.menu = menu;
+    }
+
+    public static MenuStar of(User user, Menu menu){
+        return new MenuStar(user, menu);
+    }
 
 }
