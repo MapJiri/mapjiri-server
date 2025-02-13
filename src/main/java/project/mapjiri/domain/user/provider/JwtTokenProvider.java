@@ -36,10 +36,9 @@ public class JwtTokenProvider {
     }
 
     // AccessToken 생성
-    public String createAccessToken(String email, Long userId) {
+    public String createAccessToken(String email) {
         return Jwts.builder()
                 .setSubject(email)
-                .claim("userId", userId)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + ACCESS_TOKEN_EXPIRATION))
                 .signWith(createKey(), SignatureAlgorithm.HS256)
