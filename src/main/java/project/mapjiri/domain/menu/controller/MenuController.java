@@ -21,12 +21,13 @@ public class MenuController {
 
     @GetMapping("/type")
     public ResponseEntity<ResponseDto<List<String>>> getMenuType(){
-        return ResponseEntity.status(HttpStatus.OK).body(menuService.getMenuType());
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(ResponseDto.of(menuService.getMenuType(),"메뉴 타입 반환 성공"));
     }
 
     @GetMapping("/name")
     public ResponseEntity<ResponseDto<List<String>>> getMenuName(@RequestParam("menuType") String menuType){
-        return ResponseEntity.status(HttpStatus.OK).body(menuService.getMenuName(menuType));
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(ResponseDto.of(menuService.getMenuName(menuType),"메뉴 목록 반환 성공"));
     }
-
 }
