@@ -36,10 +36,9 @@ public class JwtTokenProvider {
     }
 
     // AccessToken 생성
-    public String createAccessToken(Long userId, String email) {
+    public String createAccessToken(String email) {
         return Jwts.builder()
                 .setSubject(email)
-                .claim("userId", userId)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + ACCESS_TOKEN_EXPIRATION))
                 .signWith(createKey(), SignatureAlgorithm.HS256)
@@ -47,9 +46,9 @@ public class JwtTokenProvider {
     }
 
     // RefreshToken 생성
-    public String createRefreshToken(Long userId) {
+    public String createRefreshToken(String email) {
         return Jwts.builder()
-                .setSubject(String.valueOf(userId))
+                .setSubject(email)
                 .setExpiration(new Date(System.currentTimeMillis() + REFRESH_TOKEN_EXPIRATION))
                 .signWith(createKey(), SignatureAlgorithm.HS256)
                 .compact();
@@ -86,5 +85,4 @@ public class JwtTokenProvider {
 
         return new UsernamePasswordAuthenticationToken(user, null, List.of(authority));
     }
-
 }

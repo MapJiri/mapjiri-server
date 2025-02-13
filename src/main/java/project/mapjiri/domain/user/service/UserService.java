@@ -1,11 +1,17 @@
 package project.mapjiri.domain.user.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
+import project.mapjiri.domain.user.dto.request.LogoutRequestDto;
+import project.mapjiri.domain.user.dto.request.RefreshAccessTokenRequestDto;
 import project.mapjiri.domain.user.dto.request.SignInRequestDto;
 import project.mapjiri.domain.user.dto.request.SignUpRequestDto;
+import project.mapjiri.domain.user.dto.response.RefreshAccessTokenResponseDto;
 import project.mapjiri.domain.user.dto.response.SignInResponseDto;
 import project.mapjiri.domain.user.dto.response.SignUpResponseDto;
 import project.mapjiri.domain.user.model.User;
@@ -17,6 +23,7 @@ import project.mapjiri.domain.user.repository.UserRepository;
 public class UserService {
     private final UserRepository userRepository;
     private final JwtTokenProvider jwtTokenProvider;
+    private final RedisService redisService;
 
     private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
@@ -52,9 +59,54 @@ public class UserService {
             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
         }
 
-        String accessToken = jwtTokenProvider.createAccessToken(user.getUserId(), user.getEmail());
-        String refreshToken = jwtTokenProvider.createRefreshToken(user.getUserId());
+        String accessToken = jwtTokenProvider.createAccessToken(user.getEmail(), user.getUserId());
+        String refreshToken = jwtTokenProvider.createRefreshToken(user.getEmail());
+
+        redisService.setRefreshToken(user.getEmail(), refreshToken);
 
         return new SignInResponseDto(accessToken, refreshToken);
+    }
+
+    public RefreshAccessTokenResponseDto refreshAccessToken(RefreshAccessTokenRequestDto request) {
+        String refreshToken = request.getRefreshToken();
+
+        if (!jwtTokenProvider.validateToken(refreshToken)) {
+            throw new IllegalArgumentException("유효하지 않은 Refresh Token 입니다.");
+        }
+
+        String email = jwtTokenProvider.getEmailfromToken(refreshToken);
+        String getRefreshToken = redisService.getRefreshToken(email);
+
+        if (getRefreshToken == null || !getRefreshToken.equals(refreshToken)) {
+            throw new IllegalArgumentException("이미 만료된 Refresh Token 입니다.");
+        }
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
+
+        String newAccessToken = jwtTokenProvider.createAccessToken(email, user.getUserId());
+
+        return new RefreshAccessTokenResponseDto(newAccessToken, getRefreshToken);
+    }
+
+    public void logout(@RequestBody LogoutRequestDto request) {
+        String refreshToken = request.getRefreshToken();
+        String accessToken = request.getAccessToken();
+
+        // RefreshToken 삭제
+        String email = jwtTokenProvider.getEmailfromToken(refreshToken);
+        redisService.deleteRefreshToken(email);
+
+        // AccessToken 블랙 리스트 추가
+        redisService.addToBlacklist(accessToken);
+    }
+
+    public User findUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated() || authentication.getPrincipal().equals("anonymousUser")) {
+            throw new IllegalStateException("인증된 사용자가 없습니다.");
+        }
+
+        return (User) authentication.getPrincipal();
     }
 }
