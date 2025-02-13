@@ -15,19 +15,19 @@ public class MenuService {
 
     private final MenuRepository menuRepository;
 
-    public ResponseDto<List<String>> getMenuType(){
+    public List<String> getMenuType(){
         List<String> menuTypeList = menuRepository.findDistinctType();
         if (menuTypeList.isEmpty()) {
             throw new MyException(MyErrorCode.NOT_FOUND_MENU);
         }
-        return ResponseDto.of(menuTypeList, "메뉴 타입 목록 반환 성공");
+        return menuTypeList;
     }
 
-    public ResponseDto<List<String>> getMenuName(String menuType){
+    public List<String> getMenuName(String menuType){
         List<String> menuNameList = menuRepository.findNameByType(menuType);
         if (menuNameList.isEmpty()) {
             throw new MyException(MyErrorCode.NOT_FOUND_MENU);
         }
-        return ResponseDto.of(menuNameList, "메뉴 목록 반환 성공");
+        return menuNameList;
     }
 }
