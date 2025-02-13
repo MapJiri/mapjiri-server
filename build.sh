@@ -1,5 +1,5 @@
 #!/bin/bash
-./gradlew build -x test
+./gradlew build -Pspring.profiles.active=dev -x test
 # test 수행이 깨지지만 기능 상 문제가 없기에 서버에 배포가 우선이므로 임시로 test task 수행을 제외함
 
 # Define variables for Docker Hub account and image details
