@@ -1,6 +1,8 @@
 package project.mapjiri.domain.user.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -94,5 +96,14 @@ public class UserService {
 
         // AccessToken 블랙 리스트 추가
         redisService.addToBlacklist(accessToken);
+    }
+
+    public User findUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated() || authentication.getPrincipal().equals("anonymousUser")) {
+            throw new IllegalStateException("인증된 사용자가 없습니다.");
+        }
+
+        return (User) authentication.getPrincipal();
     }
 }
