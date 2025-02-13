@@ -15,19 +15,19 @@ public class PlaceService {
 
     private final PlaceRepository placeRepository;
 
-    public ResponseDto<List<String>> getGuName(){
+    public List<String> getGuName(){
         List<String> guNameList = placeRepository.findDistinctGu();
         if (guNameList.isEmpty()) {
             throw new MyException(MyErrorCode.NOT_FOUND_PLACE);
         }
-        return ResponseDto.of(guNameList, " 구 목록 반환 성공");
+        return guNameList;
     }
 
-    public ResponseDto<List<String>> getDongName(String gu){
+    public List<String> getDongName(String gu){
         List<String> dongNameList = placeRepository.findDongByGu(gu);
         if (dongNameList.isEmpty()) {
             throw new MyException(MyErrorCode.NOT_FOUND_PLACE);
         }
-        return ResponseDto.of(dongNameList, "동 목록 반환 성공");
+        return dongNameList;
     }
 }
