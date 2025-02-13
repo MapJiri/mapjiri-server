@@ -1,6 +1,8 @@
 package project.mapjiri.domain.user.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -57,7 +59,7 @@ public class UserService {
             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
         }
 
-        String accessToken = jwtTokenProvider.createAccessToken(user.getEmail());
+        String accessToken = jwtTokenProvider.createAccessToken(user.getEmail(), user.getUserId());
         String refreshToken = jwtTokenProvider.createRefreshToken(user.getEmail());
 
         redisService.setRefreshToken(user.getEmail(), refreshToken);
@@ -79,7 +81,10 @@ public class UserService {
             throw new IllegalArgumentException("이미 만료된 Refresh Token 입니다.");
         }
 
-        String newAccessToken = jwtTokenProvider.createAccessToken(email);
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
+
+        String newAccessToken = jwtTokenProvider.createAccessToken(email, user.getUserId());
 
         return new RefreshAccessTokenResponseDto(newAccessToken, getRefreshToken);
     }
@@ -94,5 +99,14 @@ public class UserService {
 
         // AccessToken 블랙 리스트 추가
         redisService.addToBlacklist(accessToken);
+    }
+
+    public User findUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated() || authentication.getPrincipal().equals("anonymousUser")) {
+            throw new IllegalStateException("인증된 사용자가 없습니다.");
+        }
+
+        return (User) authentication.getPrincipal();
     }
 }
