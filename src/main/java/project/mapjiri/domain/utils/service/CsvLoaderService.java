@@ -29,7 +29,7 @@ public class CsvLoaderService {
 
         InputStream inputStream = getClass().getResourceAsStream("/places.csv");
         if (inputStream == null) {
-            throw new IllegalArgumentException("CSV 파일: places.csv 를 찾을 수 없습니다.");
+            throw new MyException(MyErrorCode.NOT_FOUND_CSVFILE);
         }
         Reader reader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
 
@@ -57,7 +57,7 @@ public class CsvLoaderService {
 
         InputStream inputStream = getClass().getResourceAsStream("/menus.csv");
         if (inputStream == null) {
-            throw new IllegalArgumentException("CSV 파일: menus.csv 를 찾을 수 없습니다.");
+            throw new MyException(MyErrorCode.NOT_FOUND_CSVFILE);
         }
         Reader reader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
 
