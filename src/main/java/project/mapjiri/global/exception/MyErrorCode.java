@@ -17,7 +17,8 @@ public enum MyErrorCode {
     ALREADY_FAVORITE_MENU(HttpStatus.BAD_REQUEST, "이미 즐겨찾기에 등록된 메뉴 입니다." ),
     NOT_FOUND_FAVORITE_MENU(HttpStatus.NOT_FOUND,"즐겨찾기에 등록되지 않은 메뉴 입니다." ),
     NOT_FOUND_PLACE(HttpStatus.NOT_FOUND,"등록된 위치가 없습니다."),
-    NOT_FOUND_MENU(HttpStatus.NOT_FOUND,"등록된 메뉴가 없습니다.");
+    NOT_FOUND_MENU(HttpStatus.NOT_FOUND,"등록된 메뉴가 없습니다."),
+    NOT_FOUND_CSVFILE(HttpStatus.NOT_FOUND,"CSV 파일을 찾을 수 없습니다.");
 
     private final HttpStatus status;
     private final String message;
