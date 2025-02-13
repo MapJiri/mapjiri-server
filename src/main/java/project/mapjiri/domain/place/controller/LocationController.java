@@ -30,12 +30,14 @@ public class LocationController {
 
     @GetMapping("/gu")
     public ResponseEntity<ResponseDto<List<String>>> getGuName(){
-        return ResponseEntity.status(HttpStatus.OK).body(placeService.getGuName());
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(ResponseDto.of(placeService.getGuName(),"구 목록 반환 성공"));
     }
 
     @GetMapping("/dong")
     public ResponseEntity<ResponseDto<List<String>>> getDongName(@RequestParam("gu") String gu){
-        return ResponseEntity.status(HttpStatus.OK).body(placeService.getDongName(gu));
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(ResponseDto.of(placeService.getDongName(gu), "동 목록 반환 성공"));
     }
 
 }
