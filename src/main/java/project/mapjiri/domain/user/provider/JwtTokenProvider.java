@@ -77,6 +77,15 @@ public class JwtTokenProvider {
                 .getSubject();
     }
 
+    // 토큰으로 userId 알아내기
+    public Long getUserIdFromToken(String token) {
+        String email = getEmailfromToken(token);
+
+        return userRepository.findByEmail(email)
+                .map(User::getUserId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
+    }
+
     // 권한을 부여하는 부분
     public Authentication getAuthentication(String email) {
         User user = userRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException(email));
