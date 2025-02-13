@@ -5,6 +5,7 @@ import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.TestFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 import project.mapjiri.domain.restaurant.model.Restaurant;
 import project.mapjiri.domain.restaurant.model.RestaurantRepository;
 import project.mapjiri.domain.review.dto.ReviewListResponse;
@@ -21,6 +22,7 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 
+@ActiveProfiles("test")
 @SpringBootTest
 class ReviewServiceImplTest {
     @Autowired
