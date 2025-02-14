@@ -24,7 +24,18 @@ public class WebSecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/v1/user/signin", "/api/v1/user/signup").permitAll()
+                        .requestMatchers("/*",
+                                "/api/v1/user/*",
+                                "/api/v1/locations/*",
+                                "/api/v1/locations/gu",
+                                "/api/v1/menu/*" ,
+                                "/api/v1/search/nearby",
+                                "/api/v1/star/place",
+                                "/api/v1/star/menu",
+                                "/*.html",
+                                "/*.css",
+                                "/*.js")
+                        .permitAll()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
