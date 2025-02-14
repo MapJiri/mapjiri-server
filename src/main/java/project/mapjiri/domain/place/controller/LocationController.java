@@ -40,4 +40,10 @@ public class LocationController {
                 .body(ResponseDto.of(placeService.getDongName(gu), "동 목록 반환 성공"));
     }
 
+    @GetMapping("/find-gu")
+    public ResponseEntity<ResponseDto<String>> findGu(@RequestParam("dong") String dong){
+        return  ResponseEntity.status(HttpStatus.OK)
+                .body(ResponseDto.of(placeService.findPlace(dong).getGu(),"구 이름 반환 성공"));
+    }
+
 }
