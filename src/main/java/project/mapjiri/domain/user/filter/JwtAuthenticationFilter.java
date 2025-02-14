@@ -22,10 +22,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         String requestURI = request.getRequestURI();
 
-        if (isPublicUrl(requestURI)) {
-            filterChain.doFilter(request, response); // 토큰 검사 없이 진행
-            return;
-        }
+//        if (isPublicUrl(requestURI)) {
+//            filterChain.doFilter(request, response); // 토큰 검사 없이 진행
+//            return;
+//        }
 
         String token = request.getHeader("Authorization");
 
@@ -37,6 +37,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 String email = jwtTokenProvider.getEmailfromToken(token);
                 Authentication authentication = jwtTokenProvider.getAuthentication(email);
                 SecurityContextHolder.getContext().setAuthentication(authentication);
+                System.out.println("authentication = " + authentication);
             }
         }
         filterChain.doFilter(request, response);
@@ -45,6 +46,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private static boolean isPublicUrl(final String requestURI) {
 
         return
-                requestURI.startsWith("/login");
+                requestURI.startsWith("/");
     }
 }
