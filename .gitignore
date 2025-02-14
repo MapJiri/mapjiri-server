@@ -39,3 +39,6 @@ out/
 
 ### VS Code ###
 .vscode/
+
+### API 문서 ###
+openapi3.yaml

@@ -2,6 +2,8 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '3.4.2'
     id 'io.spring.dependency-management' version '1.1.7'
+    id('com.epages.restdocs-api-spec') version '0.19.4'
+    id 'jacoco'
 }
 
 group = 'project'
@@ -11,6 +13,10 @@ java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(17)
     }
+}
+
+jacoco {
+    toolVersion = "0.8.12"
 }
 
 configurations {
@@ -50,11 +56,109 @@ dependencies {
     implementation 'io.jsonwebtoken:jjwt-impl:0.11.5'
     implementation 'io.jsonwebtoken:jjwt-jackson:0.11.5'
 
-    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+    // OpenAPI Specification
+    implementation 'org.springdoc:springdoc-openapi-ui:1.8.0'
+    testImplementation("com.epages:restdocs-api-spec-mockmvc:0.19.4")
+    testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
 
     implementation 'org.springframework.boot:spring-boot-starter-mail'
 }
 
 tasks.named('test') {
     useJUnitPlatform()
+    finalizedBy('copyOasToSwagger') // test 태스크 실행 후에 copyOasToSwagger 태스크 실행
+    finalizedBy("jacocoTestReport") // test 태스크 실행 후에 jacocoTestReport 테스크 실행
 }
+
+openapi3 {
+    server = 'http://localhost:8080'
+    title = 'MAJIRI API'
+    description = 'MAJIRI API'
+    version = '0.0.1'
+    format = 'yaml'
+}
+
+tasks.register('copyOasToSwagger', Copy) {
+    // 기존 yaml 파일 삭제
+    delete 'src/main/resources/static/swagger-ui/openapi3.yaml'
+
+    // 복제할 yaml 파일 타겟팅
+    from layout.buildDirectory.file("api-spec/openapi3.yaml")
+
+    // 타겟 디렉토리로 파일 복제
+    into 'src/main/resources/static/swagger-ui'
+
+    // openapi3 task가 먼저 실행되도록 설정
+    dependsOn tasks.named('openapi3')
+
+    doFirst {
+        // 빌드디렉터리 yaml 파일에 보안 스키마 추가
+        def openapi3File = layout.buildDirectory.file("api-spec/openapi3.yaml").get().asFile
+
+        def securitySchemesContent = "  securitySchemes:\n" +       \
+                                           "    JWT:\n" +       \
+                                           "      type: apiKey\n" +       \
+                                           "      name: Authorization\n" +       \
+                                           "      in: header\n" +      \
+                                           "security:\n" +
+                "  - JWT: []  "
+
+        // openapi 3.yaml 파일에 내용을 추가
+        if (openapi3File.exists()) {
+            openapi3File.append(securitySchemesContent)
+        } else {
+            println "Warning: openapi3.yaml not found at ${openapi3File.path}"
+        }
+    }
+
+    bootRun {
+        // openapi3 task가 먼저 실행되도록 설정
+        dependsOn 'openapi3'
+    }
+}
+
+def jacocoExclusions = [
+        "**/*Application*",
+        "**/dto/**",
+        "**/exception/**",
+        "**/config/**",
+        "**/generated/**" // lombok 자동 생성 파일
+]
+
+tasks.named('jacocoTestReport') {
+    dependsOn tasks.named('test')
+    reports {
+        xml.required.set(true)
+        html.required.set(true)
+        csv.required.set(false)
+    }
+    classDirectories.setFrom(
+            files(classDirectories.files.collect { dir ->
+                fileTree(dir) {
+                    exclude jacocoExclusions
+                }
+            })
+    )
+    finalizedBy tasks.named('jacocoTestCoverageVerification')  // 리포트 생성 후 검증 작업 진행
+}
+
+tasks.named('jacocoTestCoverageVerification') {
+    violationRules {
+        rule {
+            enabled = true
+            element = "BUNDLE"
+            limit {
+                counter = "INSTRUCTION"
+                value = "COVEREDRATIO"
+                minimum = 0.20 // 이후 0.80 내외 추천
+            }
+            limit {
+                counter = "BRANCH"
+                value = "COVEREDRATIO"
+                minimum = 0.20 // 이후 0.80 내외 추천
+            }
+            excludes = jacocoExclusions
+        }
+    }
+}
+

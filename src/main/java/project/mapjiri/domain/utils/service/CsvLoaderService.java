@@ -10,6 +10,8 @@ import project.mapjiri.domain.menu.model.Menu;
 import project.mapjiri.domain.menu.repository.MenuRepository;
 import project.mapjiri.domain.place.model.Place;
 import project.mapjiri.domain.place.repository.PlaceRepository;
+import project.mapjiri.global.exception.MyErrorCode;
+import project.mapjiri.global.exception.MyException;
 
 import java.io.IOException;
 import java.io.InputStream;
