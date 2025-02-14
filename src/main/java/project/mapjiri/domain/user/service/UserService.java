@@ -33,6 +33,10 @@ public class UserService {
             throw new IllegalArgumentException("이미 존재하는 이메일입니다.");
         }
 
+        if (!redisService.isMailVerified(email)) {
+            throw new IllegalArgumentException("이메일 인증이 필요합니다.");
+        }
+
         String username = requestDto.getUsername();
         if (userRepository.existsByUsername(username)) {
             throw new IllegalArgumentException("이미 존재하는 닉네임입니다.");
@@ -59,7 +63,7 @@ public class UserService {
             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
         }
 
-        String accessToken = jwtTokenProvider.createAccessToken(user.getEmail(), user.getUserId());
+        String accessToken = jwtTokenProvider.createAccessToken(user.getEmail());
         String refreshToken = jwtTokenProvider.createRefreshToken(user.getEmail());
 
         redisService.setRefreshToken(user.getEmail(), refreshToken);
@@ -81,10 +85,7 @@ public class UserService {
             throw new IllegalArgumentException("이미 만료된 Refresh Token 입니다.");
         }
 
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
-
-        String newAccessToken = jwtTokenProvider.createAccessToken(email, user.getUserId());
+        String newAccessToken = jwtTokenProvider.createAccessToken(email);
 
         return new RefreshAccessTokenResponseDto(newAccessToken, getRefreshToken);
     }
