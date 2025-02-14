@@ -3,6 +3,7 @@ plugins {
     id 'org.springframework.boot' version '3.4.2'
     id 'io.spring.dependency-management' version '1.1.7'
     id('com.epages.restdocs-api-spec') version '0.19.4'
+    id 'jacoco'
 }
 
 group = 'project'
@@ -12,6 +13,10 @@ java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(17)
     }
+}
+
+jacoco {
+    toolVersion = "0.8.12"
 }
 
 configurations {
@@ -62,6 +67,7 @@ dependencies {
 tasks.named('test') {
     useJUnitPlatform()
     finalizedBy('copyOasToSwagger') // test 태스크 실행 후에 copyOasToSwagger 태스크 실행
+    finalizedBy("jacocoTestReport") // test 태스크 실행 후에 jacocoTestReport 테스크 실행
 }
 
 openapi3 {
@@ -110,3 +116,49 @@ tasks.register('copyOasToSwagger', Copy) {
         dependsOn 'openapi3'
     }
 }
+
+def jacocoExclusions = [
+        "**/*Application*",
+        "**/dto/**",
+        "**/exception/**",
+        "**/config/**",
+        "**/generated/**" // lombok 자동 생성 파일
+]
+
+tasks.named('jacocoTestReport') {
+    dependsOn tasks.named('test')
+    reports {
+        xml.required.set(true)
+        html.required.set(true)
+        csv.required.set(false)
+    }
+    classDirectories.setFrom(
+            files(classDirectories.files.collect { dir ->
+                fileTree(dir) {
+                    exclude jacocoExclusions
+                }
+            })
+    )
+    finalizedBy tasks.named('jacocoTestCoverageVerification')  // 리포트 생성 후 검증 작업 진행
+}
+
+tasks.named('jacocoTestCoverageVerification') {
+    violationRules {
+        rule {
+            enabled = true
+            element = "BUNDLE"
+            limit {
+                counter = "INSTRUCTION"
+                value = "COVEREDRATIO"
+                minimum = 0.20 // 이후 0.80 내외 추천
+            }
+            limit {
+                counter = "BRANCH"
+                value = "COVEREDRATIO"
+                minimum = 0.20 // 이후 0.80 내외 추천
+            }
+            excludes = jacocoExclusions
+        }
+    }
+}
+
