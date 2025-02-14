@@ -7,14 +7,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import project.mapjiri.domain.user.dto.request.LogoutRequestDto;
-import project.mapjiri.domain.user.dto.request.RefreshAccessTokenRequestDto;
-import project.mapjiri.domain.user.dto.request.SignInRequestDto;
-import project.mapjiri.domain.user.dto.request.SignUpRequestDto;
+import project.mapjiri.domain.user.dto.request.*;
 import project.mapjiri.domain.user.dto.response.RefreshAccessTokenResponseDto;
 import project.mapjiri.domain.user.dto.response.SignInResponseDto;
 import project.mapjiri.domain.user.dto.response.SignUpResponseDto;
 import project.mapjiri.domain.user.provider.JwtTokenProvider;
+import project.mapjiri.domain.user.service.MailService;
 import project.mapjiri.domain.user.service.RedisService;
 import project.mapjiri.domain.user.service.UserService;
 
@@ -25,8 +23,7 @@ import javax.naming.AuthenticationException;
 @RequestMapping("/api/v1/user")
 public class UserController {
     private final UserService userService;
-    private final RedisService redisService;
-    private final JwtTokenProvider jwtTokenProvider;
+    private final MailService mailService;
 
     @PostMapping("/signup")
     public ResponseEntity<SignUpResponseDto> signUp(@RequestBody SignUpRequestDto request) throws AuthenticationException {
@@ -49,5 +46,17 @@ public class UserController {
     @PostMapping("/logout")
     public void logout(@RequestBody LogoutRequestDto request) {
         userService.logout(request);
+    }
+
+    @PostMapping("/send")
+    public ResponseEntity<?> sendMail(@RequestBody MailSendRequestDto request) {
+        mailService.sendMail(request);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/verify")
+    public ResponseEntity<?> verifyMail(@RequestBody MailVerifyRequestDto request) {
+        mailService.verifyCode(request);
+        return ResponseEntity.ok().build();
     }
 }
