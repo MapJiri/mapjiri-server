@@ -58,7 +58,7 @@ public class UserService {
         }
 
         String accessToken = jwtTokenProvider.createAccessToken(user.getEmail());
-        String refreshToken = jwtTokenProvider.createRefreshToken(user.getEmail());
+        String refreshToken = jwtTokenProvider.createRefreshToken(user.getUserId(), user.getEmail());
 
         redisService.setRefreshToken(user.getEmail(), refreshToken);
 

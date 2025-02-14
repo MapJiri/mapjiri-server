@@ -46,14 +46,31 @@ public class JwtTokenProvider {
     }
 
     // RefreshToken 생성
-    public String createRefreshToken(String email) {
+    public String createRefreshToken(Long userId,String email) {
         return Jwts.builder()
                 .setSubject(email)
+                .claim("userId", userId)
                 .setExpiration(new Date(System.currentTimeMillis() + REFRESH_TOKEN_EXPIRATION))
                 .signWith(createKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
 
+    //토큰에서 Claims(사용자 정보) 가져오는 메서드 추가
+    public Claims getClaims(String token) {
+        return Jwts.parserBuilder()
+                .setSigningKey(createKey())
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+    }
+
+    public String createRefreshToken(Long userId) {
+        return Jwts.builder()
+                .setSubject(String.valueOf(userId))
+                .setExpiration(new Date(System.currentTimeMillis() + REFRESH_TOKEN_EXPIRATION))
+                .signWith(createKey(), SignatureAlgorithm.HS256)
+                .compact();
+    }
     // 토큰 검증
     public boolean validateToken(String token) {
         try {
