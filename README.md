@@ -1,2 +1,2 @@
 # server
-Mapjiri 백엔드 리포
+카카오 oauth 파일
