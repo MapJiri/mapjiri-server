@@ -55,11 +55,12 @@ public class UserService {
         User user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 이메일입니다."));
 
-        String password = user.getPassword();
-        // 암호화된 비밀번호
-        String encodedPassword = passwordEncoder.encode(password);
+        // 사용자가 입력한 패스워드
+        String rawPassword = request.getPassword();
+        // 회원가입 할 때 입력한 패스워드 (암호화되어 있는 상태)
+        String storedPassword = user.getPassword();
 
-        if (!passwordEncoder.matches(password, encodedPassword)) {
+        if (!passwordEncoder.matches(rawPassword, storedPassword)) {
             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
         }
 
