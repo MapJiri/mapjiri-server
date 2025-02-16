@@ -6,6 +6,7 @@ import org.springframework.data.repository.query.Param;
 import project.mapjiri.domain.place.model.Place;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface PlaceRepository extends JpaRepository<Place, Long> {
 
@@ -16,4 +17,6 @@ public interface PlaceRepository extends JpaRepository<Place, Long> {
     List<String> findDongByGu(@Param("gu") String gu);
 
     boolean existsByGuAndDong(String gu, String dong);
+
+    Optional<Place> findByDong(String dong);
 }

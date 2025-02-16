@@ -31,7 +31,7 @@ public class Menu {
     private List<MenuStar> menuStars = new ArrayList<>();
 
     @Builder
-    public Menu(String menuType, String menuName){
+    public Menu(String menuType, String menuName) {
         this.menuType = menuType;
         this.menuName = menuName;
     }

@@ -2,6 +2,7 @@ package project.mapjiri.domain.menu.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import project.mapjiri.domain.menu.model.Menu;
 import project.mapjiri.domain.menu.repository.MenuRepository;
 import project.mapjiri.global.dto.ResponseDto;
 import project.mapjiri.global.exception.MyErrorCode;
@@ -29,5 +30,10 @@ public class MenuService {
             throw new MyException(MyErrorCode.NOT_FOUND_MENU);
         }
         return menuNameList;
+    }
+
+    public Menu findMenu(String menuName){
+        return menuRepository.findByMenuName(menuName)
+                .orElseThrow(() -> new MyException(MyErrorCode.NOT_FOUND_MENU));
     }
 }

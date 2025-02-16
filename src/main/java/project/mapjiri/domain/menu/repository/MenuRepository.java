@@ -6,6 +6,7 @@ import org.springframework.data.repository.query.Param;
 import project.mapjiri.domain.menu.model.Menu;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface MenuRepository extends JpaRepository<Menu, Long> {
 
@@ -16,4 +17,6 @@ public interface MenuRepository extends JpaRepository<Menu, Long> {
     List<String> findNameByType(@Param("menuType") String menuType);
 
     boolean existsByMenuTypeAndMenuName(String menuType, String menuName);
+
+    Optional<Menu> findByMenuName(String menuName);
 }

@@ -1,11 +1,11 @@
-package project.mapjiri.domain.menustar.dto;
+package project.mapjiri.domain.menustar.dto.request;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class MenuStarRequest {
+public class AddMenuStarRequest {
 
     String menuKeyword;
 
