@@ -2,9 +2,10 @@ package project.mapjiri.domain.placeStar.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import project.mapjiri.domain.place.model.Place;
 import project.mapjiri.domain.place.service.PlaceService;
-import project.mapjiri.domain.placeStar.dto.PlaceStarRequest;
+import project.mapjiri.domain.placeStar.dto.request.AddPlaceStarRequest;
 import project.mapjiri.domain.placeStar.model.PlaceStar;
 import project.mapjiri.domain.placeStar.repository.PlaceStarRepository;
 import project.mapjiri.domain.user.model.User;
@@ -16,6 +17,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class PlaceStarService {
 
@@ -24,19 +26,17 @@ public class PlaceStarService {
     private final PlaceStarRepository placeStarRepository;
 
     // 즐겨찾기 추가 기능
-    public PlaceStar addPlaceStar(PlaceStarRequest request){
+    public void addPlaceStar(AddPlaceStarRequest request){
 
         User user = userService.findUser();
         Place place = placeService.findPlace(request.getDong());
-        System.out.println("place = " + place);
+
         if (placeStarRepository.existsByUserAndPlace(user, place)) {
             throw new MyException(MyErrorCode.ALREADY_FAVORITE_PLACE);
         }
 
         PlaceStar placeStar = PlaceStar.of(user, place);
         placeStarRepository.save(placeStar);
-
-        return placeStar;
     }
 
     // 즐겨찾기 조회 기능

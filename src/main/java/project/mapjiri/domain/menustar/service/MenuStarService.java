@@ -2,9 +2,10 @@ package project.mapjiri.domain.menustar.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import project.mapjiri.domain.menu.model.Menu;
 import project.mapjiri.domain.menu.service.MenuService;
-import project.mapjiri.domain.menustar.dto.MenuStarRequest;
+import project.mapjiri.domain.menustar.dto.request.AddMenuStarRequest;
 import project.mapjiri.domain.menustar.model.MenuStar;
 import project.mapjiri.domain.menustar.repository.MenuStarRepository;
 import project.mapjiri.domain.user.model.User;
@@ -16,6 +17,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class MenuStarService {
 
@@ -23,7 +25,7 @@ public class MenuStarService {
     private final MenuService menuService;
     private final MenuStarRepository menuStarRepository;
 
-    public MenuStar addMenuStar(MenuStarRequest request){
+    public void addMenuStar(AddMenuStarRequest request){
 
         User user = userService.findUser();
         Menu menu = menuService.findMenu(request.getMenuKeyword());
@@ -34,8 +36,6 @@ public class MenuStarService {
 
         MenuStar menuStar = MenuStar.of(user, menu);
         menuStarRepository.save(menuStar);
-
-        return menuStar;
     }
 
     public List<String> getMenuStar(){
