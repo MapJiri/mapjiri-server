@@ -4,8 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import project.mapjiri.domain.menustar.dto.MenuStarRequest;
-import project.mapjiri.domain.menustar.model.MenuStar;
+import project.mapjiri.domain.menustar.dto.request.AddMenuStarRequest;
 import project.mapjiri.domain.menustar.service.MenuStarService;
 import project.mapjiri.global.dto.ResponseDto;
 
@@ -19,9 +18,9 @@ public class MenuStarController {
     private final MenuStarService menuStarService;
 
     @PostMapping
-    ResponseEntity<ResponseDto<MenuStar>> addMenuStar(@RequestBody MenuStarRequest request){
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(ResponseDto.of(menuStarService.addMenuStar(request),"즐겨찾기 추가 성공"));
+    ResponseEntity<ResponseDto<Void>> addMenuStar(@RequestBody AddMenuStarRequest request){
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(ResponseDto.of(null,"즐겨찾기 추가 성공"));
     }
 
     @GetMapping

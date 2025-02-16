@@ -4,8 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import project.mapjiri.domain.placeStar.dto.PlaceStarRequest;
-import project.mapjiri.domain.placeStar.model.PlaceStar;
+import project.mapjiri.domain.placeStar.dto.request.AddPlaceStarRequest;
 import project.mapjiri.domain.placeStar.service.PlaceStarService;
 import project.mapjiri.global.dto.ResponseDto;
 
@@ -19,9 +18,9 @@ public class PlaceStarController {
     private final PlaceStarService placeStarService;
 
     @PostMapping
-    ResponseEntity<ResponseDto<PlaceStar>> addPlaceStar(@RequestBody PlaceStarRequest request){
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(ResponseDto.of(placeStarService.addPlaceStar(request),"즐겨찾기 추가 성공"));
+    ResponseEntity<ResponseDto<Void>> addPlaceStar(@RequestBody AddPlaceStarRequest request){
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(ResponseDto.of(null,"즐겨찾기 추가 성공"));
     }
 
     @GetMapping
