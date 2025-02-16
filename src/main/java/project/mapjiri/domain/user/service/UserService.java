@@ -17,6 +17,8 @@ import project.mapjiri.domain.user.dto.response.SignUpResponseDto;
 import project.mapjiri.domain.user.model.User;
 import project.mapjiri.domain.user.provider.JwtTokenProvider;
 import project.mapjiri.domain.user.repository.UserRepository;
+import project.mapjiri.global.exception.MyErrorCode;
+import project.mapjiri.global.exception.MyException;
 
 @Service
 @RequiredArgsConstructor
@@ -33,9 +35,11 @@ public class UserService {
             throw new IllegalArgumentException("이미 존재하는 이메일입니다.");
         }
 
+        System.out.println("email = " + email);
         if (!redisService.isMailVerified(email)) {
             throw new IllegalArgumentException("이메일 인증이 필요합니다.");
         }
+        
 
         String username = requestDto.getUsername();
         if (userRepository.existsByUsername(username)) {
@@ -108,6 +112,9 @@ public class UserService {
             throw new IllegalStateException("인증된 사용자가 없습니다.");
         }
 
-        return (User) authentication.getPrincipal();
+        User user = (User) authentication.getPrincipal();
+
+        return userRepository.findByEmail(user.getEmail())
+                .orElseThrow(() -> new MyException(MyErrorCode.NOT_FOUND_USER));
     }
 }
