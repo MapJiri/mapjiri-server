@@ -6,6 +6,8 @@ import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.stereotype.Service;
 import project.mapjiri.domain.user.dto.request.MailSendRequestDto;
 import project.mapjiri.domain.user.dto.request.MailVerifyRequestDto;
+import project.mapjiri.global.exception.MyErrorCode;
+import project.mapjiri.global.exception.MyException;
 
 import java.util.Random;
 
@@ -39,9 +41,9 @@ public class MailService {
         String savedCode = redisService.getCode(mail);
 
         if (savedCode == null) {
-            throw new IllegalArgumentException("인증 번호가 만료되었거나 존재하지 않습니다.");
+            throw new MyException(MyErrorCode.INVALID_VERIFICATION_CODE);
         } else if (!savedCode.equals(code)) {
-            throw new IllegalArgumentException("인증 번호가 일치하지 않습니다.");
+            throw new MyException(MyErrorCode.EXPIRED_OR_NOT_FOUND_VERIFICATION_CODE);
         }
 
         redisService.deleteCode(mail);
