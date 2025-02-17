@@ -19,6 +19,7 @@ public class PlaceStarController {
 
     @PostMapping
     ResponseEntity<ResponseDto<Void>> addPlaceStar(@RequestBody AddPlaceStarRequest request){
+        placeStarService.addPlaceStar(request);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ResponseDto.of(null,"즐겨찾기 추가 성공"));
     }

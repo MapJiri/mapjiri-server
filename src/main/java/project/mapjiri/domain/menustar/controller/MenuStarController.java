@@ -19,6 +19,7 @@ public class MenuStarController {
 
     @PostMapping
     ResponseEntity<ResponseDto<Void>> addMenuStar(@RequestBody AddMenuStarRequest request){
+        menuStarService.addMenuStar(request);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ResponseDto.of(null,"즐겨찾기 추가 성공"));
     }
