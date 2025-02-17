@@ -1,10 +1,7 @@
 package project.mapjiri.domain.restaurant.model;
 
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import project.mapjiri.domain.review.model.ReviewTag;
@@ -23,12 +20,13 @@ public class Restaurant {
     @Column(nullable = false)
     private String uniqueKey;
 
+    @Embedded
     @Column(nullable = false)
-    private ReviewTag topReviewTag;
+    private Tag topTag;
 
 
-    public Restaurant(String uniqueKey, ReviewTag reviewTag) {
+    public Restaurant(String uniqueKey, Tag tag) {
         this.uniqueKey = uniqueKey;
-        this.topReviewTag = reviewTag;
+        this.topTag = tag;
     }
 }

@@ -8,6 +8,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import project.mapjiri.domain.restaurant.model.Restaurant;
 import project.mapjiri.domain.restaurant.model.RestaurantRepository;
+import project.mapjiri.domain.restaurant.model.Tag;
 import project.mapjiri.domain.review.dto.ReviewListResponse;
 import project.mapjiri.domain.review.dto.ReviewResponse;
 import project.mapjiri.domain.review.model.Review;
@@ -35,7 +36,7 @@ class ReviewServiceImplTest {
     @TestFactory
     Collection<DynamicTest> getReviewsByRestaurant() {
         // given
-        Restaurant restaurant1 = new Restaurant("식당1/대전 둔산동 242-5 1층", ReviewTag.TASTE);
+        Restaurant restaurant1 = new Restaurant("식당1/대전 둔산동 242-5 1층", Tag.of("맛", 5));
         restaurantRepository.saveAndFlush(restaurant1);
 
         List<Review> reviews = new ArrayList<>();

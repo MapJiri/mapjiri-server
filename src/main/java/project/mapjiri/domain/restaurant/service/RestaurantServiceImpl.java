@@ -7,13 +7,12 @@ import project.mapjiri.domain.restaurant.model.RestaurantRepository;
 
 @Service
 @RequiredArgsConstructor
-public class RestaurantServiceImpl implements RestaurantService{
+public class RestaurantServiceImpl implements RestaurantService {
 
     private final RestaurantRepository restaurantRepository;
 
     @Override
     public RestaurantCreateResponseDto registerRestaurantInfo(RestaurantCreateRequestDto dto) {
-
 
 
         return null;
