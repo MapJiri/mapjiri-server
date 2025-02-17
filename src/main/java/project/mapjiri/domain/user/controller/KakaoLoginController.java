@@ -19,7 +19,8 @@ public class KakaoLoginController {
     private final KakaoService kakaoService;
 
     @GetMapping("/callback")
-    public ResponseEntity<?> kakaoCallback(@RequestParam("code") String code) {
+    // public ResponseEntity<?> kakaoCallback(@RequestParam("code") String code) { //수정 전 코드
+    public KakaoUserInfoResponseDto kakaoCallback(@RequestParam("code") String code) {
         log.info("카카오 인가 코드 수신: {}", code);
 
         // ✅ 인수 1개만 전달
@@ -30,6 +31,7 @@ public class KakaoLoginController {
         KakaoUserInfoResponseDto userInfo = kakaoService.getUserInfo(accessToken);
         log.info("카카오 사용자 정보: {}", userInfo);
 
-        return ResponseEntity.ok(userInfo);
+        // return ResponseEntity.ok(userInfo); //수정전 코드
+        return userInfo;
     }
 }

@@ -33,10 +33,13 @@ public class WebSecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
                                 "/",
+                                "/login/**",
+                                "/login/page/**",
+                                "/api/v1/auth/kakao/callback/**",
                                 "/api/v1/auth/kakao/**",
                                 "/api/v1/user/signin",
-                                "/api/v1/user/signup"
-                                ,"/h2-console/**",
+                                "/api/v1/user/signup",
+                                "/h2-console/**",
                                 "/swagger-ui/**","/v3/api-docs/**"
                         ).permitAll()  // 카카오 로그인 관련 엔드포인트 모두 허용
                         .anyRequest().authenticated()

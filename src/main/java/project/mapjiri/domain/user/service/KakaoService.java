@@ -2,6 +2,8 @@ package project.mapjiri.domain.user.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpEntity;
@@ -37,17 +39,17 @@ public class KakaoService {
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+        headers.add("Accept", "application/json");
 
-        Map<String, String> params = new HashMap<>();
-        params.put("grant_type", "authorization_code");
-        params.put("client_id", kakaoConfig.getClientId());
-        params.put("redirect_uri", kakaoConfig.getRedirectUri());
-        params.put("code", code);
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.add("grant_type", "authorization_code");
+        params.add("client_id", kakaoConfig.getClientId());
+        params.add("redirect_uri", kakaoConfig.getRedirectUri());
+        params.add("code", code);
 
-        HttpEntity<Map<String, String>> request = new HttpEntity<>(params, headers);
+        HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(params, headers);
 
-        ResponseEntity<Map> response = restTemplate.exchange(
-                tokenUrl, HttpMethod.POST, request, Map.class);
+        ResponseEntity<Map> response = restTemplate.postForEntity(tokenUrl, request, Map.class);
 
         if (response.getBody() == null || !response.getBody().containsKey("access_token")) {
             throw new RuntimeException("카카오 액세스 토큰 발급 실패");
