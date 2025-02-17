@@ -23,7 +23,7 @@ public class RestDocsConfig {
     @Bean
     public RestDocumentationResultHandler restDocsMockMvcConfigurationCustomizer() {
         return MockMvcRestDocumentationWrapper.document(
-                "{class-name}/{method-name}",
+                "{method-name}",
                 HOST_INFO,
                 preprocessResponse(prettyPrint())
         );
