@@ -6,13 +6,13 @@ import org.junit.jupiter.api.TestFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.transaction.annotation.Transactional;
 import project.mapjiri.domain.restaurant.model.Restaurant;
 import project.mapjiri.domain.restaurant.model.RestaurantRepository;
 import project.mapjiri.domain.restaurant.model.Tag;
 import project.mapjiri.domain.review.dto.ReviewListResponse;
 import project.mapjiri.domain.review.dto.ReviewResponse;
 import project.mapjiri.domain.review.model.Review;
-import project.mapjiri.domain.review.model.ReviewTag;
 import project.mapjiri.domain.review.repository.ReviewRepository;
 
 import java.time.LocalDate;
@@ -24,6 +24,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @ActiveProfiles("test")
 @SpringBootTest
+@Transactional
 class ReviewServiceImplTest {
     @Autowired
     ReviewService reviewService;
@@ -36,7 +37,7 @@ class ReviewServiceImplTest {
     @TestFactory
     Collection<DynamicTest> getReviewsByRestaurant() {
         // given
-        Restaurant restaurant1 = new Restaurant("식당1/대전 둔산동 242-5 1층", Tag.of("맛", 5));
+        Restaurant restaurant1 = Restaurant.of("식당1/대전 둔산동 242-5 1층", Tag.of("맛", 5));
         restaurantRepository.saveAndFlush(restaurant1);
 
         List<Review> reviews = new ArrayList<>();

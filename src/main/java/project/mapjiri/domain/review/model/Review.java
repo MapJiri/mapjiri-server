@@ -27,7 +27,7 @@ public class Review {
     @Column(nullable = false)
     private LocalDate date;
 
-    @Column(nullable = false)
+    @Column
     private String reviewImageUrl;
 
     @ManyToOne(fetch = FetchType.LAZY)

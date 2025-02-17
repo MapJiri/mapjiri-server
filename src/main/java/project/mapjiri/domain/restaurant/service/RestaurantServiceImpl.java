@@ -12,6 +12,7 @@ import project.mapjiri.domain.review.model.Review;
 import project.mapjiri.domain.review.repository.ReviewRepository;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -27,7 +28,7 @@ public class RestaurantServiceImpl implements RestaurantService {
     public RestaurantListCreateResponseDto registerRestaurantInfos(RestaurantListCreateRequestDto dto) {
         List<RestaurantCreateRequestDto> list = dto.getList();
 
-        List<Review> reviews = new ArrayList<>();
+
         List<RestaurantCreateResponseDto> response = new ArrayList<>();
         for(RestaurantCreateRequestDto singleDto : list) {
             String restaurantUniqueKey = singleDto.getName() + "/" + singleDto.getAddress();
@@ -41,16 +42,20 @@ public class RestaurantServiceImpl implements RestaurantService {
             // 식당 정보 저장
             Restaurant restaurant = Restaurant.of(restaurantUniqueKey, topTag);
             Restaurant savedRestaurant = restaurantRepository.save(restaurant);
-            response.add(RestaurantCreateResponseDto.of(savedRestaurant.getRestaurantId()));
 
             // 식당 후기 정보 저장
             List<ReviewCreateResponseDto> reviewsDtoList = singleDto.getReviews();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+            List<Review> reviews = new ArrayList<>();
             for(ReviewCreateResponseDto singleReviewDto : reviewsDtoList){
-                Review review = Review.of(singleReviewDto.getReviewText(), singleReviewDto.getRating(), LocalDate.parse(singleReviewDto.getDate()), singleReviewDto.getPhotoUrl(), savedRestaurant);
+                Review review = Review.of(singleReviewDto.getReviewText(), singleReviewDto.getRating(), LocalDate.parse(singleReviewDto.getDate(), formatter), singleReviewDto.getPhotoUrl(), savedRestaurant);
                 reviews.add(review);
             }
-            reviewRepository.saveAll(reviews);
-
+            List<Review> savedReviews = reviewRepository.saveAll(reviews);
+            response.add(RestaurantCreateResponseDto.of(savedRestaurant.getRestaurantId(),
+                    savedReviews.stream()
+                            .map(Review::getReviewId)
+                            .toList()));
         }
 
         return RestaurantListCreateResponseDto.from(response);
