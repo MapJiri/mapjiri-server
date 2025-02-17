@@ -23,8 +23,11 @@ public class Restaurant {
     @Column(nullable = false)
     private Tag topTag;
 
+    public static Restaurant of(String uniqueKey, Tag topTag) {
+        return new Restaurant(uniqueKey, topTag);
+    }
 
-    public Restaurant(String uniqueKey, Tag tag) {
+    private Restaurant(String uniqueKey, Tag tag) {
         this.uniqueKey = uniqueKey;
         this.topTag = tag;
     }
