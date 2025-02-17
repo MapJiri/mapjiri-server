@@ -16,7 +16,7 @@ public class ReviewController {
 
     @GetMapping("/restaurant")
     public ResponseDto<?> getReviewsByRestaurant(@RequestParam(name = "restaurantId") Long id
-            , @RequestParam(defaultValue = "ASD", required = false) String sort
+            , @RequestParam(defaultValue = "latest", required = false) String sort
             , @RequestParam(defaultValue = "1", required = false) int pageNumber) {
         pageNumber = pageNumber <= 0 ? 0 : pageNumber - 1;
 
