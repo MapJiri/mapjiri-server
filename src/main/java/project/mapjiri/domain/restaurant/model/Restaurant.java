@@ -4,7 +4,6 @@ package project.mapjiri.domain.restaurant.model;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import project.mapjiri.domain.review.model.ReviewTag;
 
 import static jakarta.persistence.GenerationType.IDENTITY;
 import static lombok.AccessLevel.PROTECTED;
