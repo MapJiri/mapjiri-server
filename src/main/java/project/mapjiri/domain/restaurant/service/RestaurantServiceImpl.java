@@ -13,7 +13,7 @@ public class RestaurantServiceImpl implements RestaurantService {
 
     @Override
     public RestaurantCreateResponseDto registerRestaurantInfo(RestaurantListCreateRequestDto dto) {
-
+        //
 
         return null;
     }

@@ -9,6 +9,7 @@ import java.util.Map;
 @Getter
 public class RestaurantCreateRequestDto {
     private String name;
+    private String address;
     private Map<String, String> tags;
     private List<ReviewCreateResponseDto> reviews;
 }
