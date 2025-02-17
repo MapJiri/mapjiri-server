@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import project.mapjiri.domain.restaurant.dto.RestaurantListCreateRequestDto;
 import project.mapjiri.domain.restaurant.service.RestaurantCreateResponseDto;
+import project.mapjiri.domain.restaurant.service.RestaurantListCreateResponseDto;
 import project.mapjiri.domain.restaurant.service.RestaurantService;
 import project.mapjiri.global.dto.ResponseDto;
 
@@ -18,8 +19,8 @@ public class RestaurantController {
     private final RestaurantService restaurantService;
 
     @PostMapping("/info")
-    public ResponseDto<RestaurantCreateResponseDto> registerRestaurantInfo(@RequestBody RestaurantListCreateRequestDto requestBody) {
+    public ResponseDto<RestaurantListCreateResponseDto> registerRestaurantInfo(@RequestBody RestaurantListCreateRequestDto requestBody) {
 
-        return ResponseDto.of(restaurantService.registerRestaurantInfo(requestBody), "성공");
+        return ResponseDto.of(restaurantService.registerRestaurantInfos(requestBody), "성공");
     }
 }
