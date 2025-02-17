@@ -22,4 +22,6 @@ public class ReviewController {
 
         return ResponseDto.of(reviewService.getReviewsByRestaurant(id, sort, pageNumber), "리뷰 목록 조회 성공");
     }
+
+
 }

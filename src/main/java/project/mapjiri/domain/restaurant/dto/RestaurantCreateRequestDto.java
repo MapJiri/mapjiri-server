@@ -4,10 +4,11 @@ import lombok.Getter;
 import project.mapjiri.domain.review.dto.ReviewCreateResponseDto;
 
 import java.util.List;
+import java.util.Map;
 
 @Getter
 public class RestaurantCreateRequestDto {
     private String name;
-    private List<String> tags;
+    private Map<String, String> tags;
     private List<ReviewCreateResponseDto> reviews;
 }
