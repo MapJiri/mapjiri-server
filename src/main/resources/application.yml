@@ -3,16 +3,17 @@ server:
 
 spring:
   datasource:
-    url: ${DB_URL}
-    username: ${DB_USERNAME}
-    password: ${DB_PASSWORD}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://mapjiri.cxus4mqqodlg.ap-northeast-2.rds.amazonaws.com:3306/mapjiri
+    username: admin
+    password: mapjiri33!!
   data:
     redis:
       host: localhost
       port: 6379
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
     show-sql: true
     properties:
       hibernate:
@@ -27,9 +28,10 @@ spring:
       mail.smtp.starttls.enable: true
 
 jwt:
-  secret: ${JWT_SECRET}
+  secret: 5b663f464d6e8adde984dee65e0d875e099ad24511995a4168dee7b397058d01
 kakao:
   api:
-    key: ${KAKAO_API_KEY}
+    key: d60981860b2fdf1e844f0ea62dd425a6
+
 
 

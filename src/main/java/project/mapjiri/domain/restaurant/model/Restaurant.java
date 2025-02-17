@@ -21,33 +21,14 @@ public class Restaurant {
     private Long restaurantId;
 
     @Column(nullable = false)
-    private String restaurantName;
-
-    @Column(nullable = false)
-    private String restaurantOldPlace;
-
-    @Column(nullable = false)
-    private String restaurantNewPlace;
-
-    @Column(nullable = false)
-    private String restaurantNumber;
+    private String uniqueKey;
 
     @Column(nullable = false)
     private ReviewTag topReviewTag;
 
-    @Column(nullable = false)
-    private Double restaurantLongitude;
 
-    @Column(nullable = false)
-    private Double restaurantLatitude;
-
-    public Restaurant(String restaurantName, String restaurantOldPlace, String restaurantNewPlace, String restaurantNumber, ReviewTag reviewTag, Double restaurantLongitude, Double restaurantLatitude) {
-        this.restaurantName = restaurantName;
-        this.restaurantOldPlace = restaurantOldPlace;
-        this.restaurantNewPlace = restaurantNewPlace;
-        this.restaurantNumber = restaurantNumber;
+    public Restaurant(String uniqueKey, ReviewTag reviewTag) {
+        this.uniqueKey = uniqueKey;
         this.topReviewTag = reviewTag;
-        this.restaurantLongitude = restaurantLongitude;
-        this.restaurantLatitude = restaurantLatitude;
     }
 }

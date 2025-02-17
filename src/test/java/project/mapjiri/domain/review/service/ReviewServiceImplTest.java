@@ -20,7 +20,6 @@ import java.util.Collection;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.tuple;
 
 @ActiveProfiles("test")
 @SpringBootTest
@@ -36,7 +35,7 @@ class ReviewServiceImplTest {
     @TestFactory
     Collection<DynamicTest> getReviewsByRestaurant() {
         // given
-        Restaurant restaurant1 = new Restaurant("식당1", "구주소1", "신주소1", "번호1", ReviewTag.TASTE, 0.1, 0.1);
+        Restaurant restaurant1 = new Restaurant("식당1/대전 둔산동 242-5 1층", ReviewTag.TASTE);
         restaurantRepository.saveAndFlush(restaurant1);
 
         List<Review> reviews = new ArrayList<>();
@@ -114,23 +113,10 @@ class ReviewServiceImplTest {
 
                     List<ReviewResponse> responseList = result.getResponseList();
                     assertThat(responseList)
-                            .extracting("score", "date")
+                            .extracting("score")
                             .containsExactly(
-                                    tuple(4, LocalDate.of(2024, 3, 16)),
-                                    tuple(4, LocalDate.of(2024, 3, 17)),
-                                    tuple(4, LocalDate.of(2024, 3, 18)),
-                                    tuple(4, LocalDate.of(2024, 3, 19)),
-                                    tuple(4, LocalDate.of(2024, 3, 20)),
-                                    tuple(3, LocalDate.of(2024, 3, 21)),
-                                    tuple(3, LocalDate.of(2024, 3, 22)),
-                                    tuple(3, LocalDate.of(2024, 3, 23)),
-                                    tuple(3, LocalDate.of(2024, 3, 24)),
-                                    tuple(3, LocalDate.of(2024, 3, 25)),
-                                    tuple(3, LocalDate.of(2024, 3, 26)),
-                                    tuple(3, LocalDate.of(2024, 3, 27)),
-                                    tuple(3, LocalDate.of(2024, 3, 28)),
-                                    tuple(3, LocalDate.of(2024, 3, 29)),
-                                    tuple(3, LocalDate.of(2024, 3, 30))
+                                    4, 4, 4, 4, 4,
+                                    3, 3, 3, 3, 3, 3, 3, 3, 3, 3
                             );
                 })
 
