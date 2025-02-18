@@ -10,6 +10,8 @@ import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
+import project.mapjiri.domain.placeStar.controller.PlaceStarController;
+import project.mapjiri.domain.placeStar.service.PlaceStarService;
 import project.mapjiri.domain.restaurant.controller.SearchController;
 import project.mapjiri.domain.restaurant.service.SearchService;
 import project.mapjiri.domain.user.controller.UserController;
@@ -22,7 +24,8 @@ import project.mapjiri.support.config.RestDocsConfig;
 
 @WebMvcTest(controllers = {
         SearchController.class,
-        UserController.class
+        UserController.class,
+        PlaceStarController.class
 })
 @AutoConfigureMockMvc
 @AutoConfigureRestDocs
@@ -55,4 +58,7 @@ public abstract class RestDocsSupport {
 
     @MockitoBean
     protected MailService mailService;
+
+    @MockitoBean
+    protected PlaceStarService placestarService;
 }
