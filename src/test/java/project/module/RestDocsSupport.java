@@ -12,13 +12,17 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import project.mapjiri.domain.restaurant.controller.SearchController;
 import project.mapjiri.domain.restaurant.service.SearchService;
+import project.mapjiri.domain.user.controller.UserController;
 import project.mapjiri.domain.user.provider.JwtTokenProvider;
+import project.mapjiri.domain.user.service.MailService;
+import project.mapjiri.domain.user.service.UserService;
 import project.mapjiri.global.client.KakaoMapClient;
 import project.mapjiri.global.config.WebSecurityConfig;
 import project.mapjiri.support.config.RestDocsConfig;
 
 @WebMvcTest(controllers = {
-        SearchController.class
+        SearchController.class,
+        UserController.class
 })
 @AutoConfigureMockMvc
 @AutoConfigureRestDocs
@@ -45,4 +49,10 @@ public abstract class RestDocsSupport {
 
     @MockitoBean
     protected SearchService searchService;
+
+    @MockitoBean
+    protected UserService userService;
+
+    @MockitoBean
+    protected MailService mailService;
 }
