@@ -18,7 +18,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-        throws ServletException, IOException {
+            throws ServletException, IOException {
 
         String requestURI = request.getRequestURI();
 
@@ -43,8 +43,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     }
 
     private static boolean isPublicUrl(final String requestURI) {
-
-        return
-                requestURI.startsWith("/login");
+        return requestURI.startsWith("/v3/api-docs") ||
+                requestURI.startsWith("/favicon.ico") ||
+                requestURI.startsWith("/api/v1/user/signin") ||
+                requestURI.startsWith("/api/v1/user/signup") ||
+                requestURI.startsWith("/api/v1/user/send") ||
+                requestURI.startsWith("/api/v1/user/verify");
     }
 }
