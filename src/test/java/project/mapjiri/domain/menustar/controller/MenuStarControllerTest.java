@@ -1,12 +1,15 @@
-package project.mapjiri.domain.placeStar.controller;
+package project.mapjiri.domain.menustar.controller;
 
-import com.epages.restdocs.apispec.*;
+import com.epages.restdocs.apispec.ResourceDocumentation;
+import com.epages.restdocs.apispec.ResourceSnippetParameters;
+import com.epages.restdocs.apispec.Schema;
+import com.epages.restdocs.apispec.SimpleType;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.web.servlet.ResultActions;
-import project.mapjiri.domain.placeStar.dto.request.AddPlaceStarRequest;
+import project.mapjiri.domain.menustar.dto.request.AddMenuStarRequest;
 import project.mapjiri.support.annotation.WithMockCustom;
 import project.module.RestDocsSupport;
 
@@ -18,25 +21,23 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+class MenuStarControllerTest extends RestDocsSupport {
 
-class PlaceStarControllerTest extends RestDocsSupport {
-
-    private final static String BASE_PLACE_STAR_URL = "/api/v1/star/place";
+    private static final String BASE_MENU_STAR_URL = "/api/v1/star/menu";
 
     @Test
     @WithMockCustom(role = "USER")
-    void API_위치_즐겨찾기_추가() throws Exception{
+    void API_메뉴_즐겨찾기_추가() throws Exception{
         //given
-        AddPlaceStarRequest addPlaceStarRequest = new AddPlaceStarRequest();
-        addPlaceStarRequest.setGu("유성구");
-        addPlaceStarRequest.setDong("온천2동");
+        AddMenuStarRequest addMenuStarRequest = new AddMenuStarRequest();
+        addMenuStarRequest.setMenuKeyword("돈까스");
 
-        Mockito.doNothing().when(placestarService).addPlaceStar(any(AddPlaceStarRequest.class));
+        Mockito.doNothing().when(menustarService).addMenuStar(any(AddMenuStarRequest.class));
 
         //when
         ResultActions actions = mockMvc.perform(
-                post(BASE_PLACE_STAR_URL)
-                        .content(objectMapper.writeValueAsString(addPlaceStarRequest))
+                post(BASE_MENU_STAR_URL)
+                        .content(objectMapper.writeValueAsString(addMenuStarRequest))
                         .contentType(MediaType.APPLICATION_JSON));
 
         //then
@@ -46,9 +47,9 @@ class PlaceStarControllerTest extends RestDocsSupport {
                 .andExpect(jsonPath("$.msg").value("즐겨찾기 추가 성공"))
                 .andDo(restDocsHandler.document(
                         ResourceDocumentation.resource(ResourceSnippetParameters.builder()
-                                .tag("PlaceStar")
-                                .summary("즐겨찾기 추가")
-                                .requestSchema(Schema.schema("AddPlaceStarRequest"))
+                                .tag("MenuStar")
+                                .summary("메뉴 즐겨찾기 추가")
+                                .requestSchema(Schema.schema("AddMenuStarRequest"))
                                 .responseFields(
                                         fieldWithPath("data").description("응답 데이터 (null)").type(JsonFieldType.NULL),
                                         fieldWithPath("msg").description("성공 응답 메세지").type(JsonFieldType.STRING)
@@ -58,28 +59,28 @@ class PlaceStarControllerTest extends RestDocsSupport {
 
     @Test
     @WithMockCustom(role = "USER")
-    void API_위치_즐겨찾기_조회() throws Exception{
+    void API_메뉴_즐겨찾기_조회() throws Exception{
         //given
 
-        Mockito.when(placestarService.getPlaceStar())
-                .thenReturn(List.of("온천2동", "온천1동", "노은1동", "노은2동"));
+        Mockito.when(menustarService.getMenuStar())
+                .thenReturn(List.of("돈까스", "짜장면", "피자", "삼겹살"));
 
         //when
         ResultActions actions = mockMvc.perform(
-                get(BASE_PLACE_STAR_URL)
+                get(BASE_MENU_STAR_URL)
                         .contentType(MediaType.APPLICATION_JSON));
 
         //then
         actions
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data").isNotEmpty())
-                .andExpect(jsonPath("$.msg").value("즐겨찾기 조회 성공"))
+                .andExpect(jsonPath("$.msg").value("즐겨찾기 목록 조회 성공"))
                 .andDo(restDocsHandler.document(
                         ResourceDocumentation.resource(ResourceSnippetParameters.builder()
-                                .tag("PlaceStar")
-                                .summary("즐겨찾기 조회")
+                                .tag("MenuStar")
+                                .summary("메뉴 즐겨찾기 조회")
                                 .responseFields(
-                                        fieldWithPath("data[]").description("즐겨찾은 행정동명").type(JsonFieldType.ARRAY),
+                                        fieldWithPath("data[]").description("즐겨찾는 음식").type(JsonFieldType.ARRAY),
                                         fieldWithPath("msg").description("성공 응답 메세지").type(JsonFieldType.STRING)
                                 ).build())
                 ));
@@ -87,15 +88,15 @@ class PlaceStarControllerTest extends RestDocsSupport {
 
     @Test
     @WithMockCustom(role = "USER")
-    void API_위치_즐겨찾기_취소() throws Exception{
+    void API_메뉴_즐겨찾기_취소() throws Exception{
         //given
-        String placeKeyword = "온천1동";
+        String menuKeyword = "돈까스";
         Mockito.doNothing().when(placestarService).delPlaceStar(any(String.class));
 
         //when
         ResultActions actions = mockMvc.perform(
-                delete(BASE_PLACE_STAR_URL)
-                        .queryParam("placeKeyword", placeKeyword)
+                delete(BASE_MENU_STAR_URL)
+                        .queryParam("menuKeyword", menuKeyword)
                         .contentType(MediaType.APPLICATION_JSON));
 
         //then
@@ -105,10 +106,10 @@ class PlaceStarControllerTest extends RestDocsSupport {
                 .andExpect(jsonPath("$.msg").value("즐겨찾기 삭제 성공"))
                 .andDo(restDocsHandler.document(
                         ResourceDocumentation.resource(ResourceSnippetParameters.builder()
-                                .tag("PlaceStar")
-                                .summary("즐겨찾기 삭제")
+                                .tag("MenuStar")
+                                .summary("메뉴 즐겨찾기 삭제")
                                 .queryParameters(
-                                        ResourceDocumentation.parameterWithName("placeKeyword").description("삭제할 행정동명").type(SimpleType.STRING)
+                                        ResourceDocumentation.parameterWithName("menuKeyword").description("삭제할 음식").type(SimpleType.STRING)
                                 )
                                 .responseFields(
                                         fieldWithPath("data").description("응답 데이터 (null)").type(JsonFieldType.NULL),
