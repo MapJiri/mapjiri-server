@@ -2,6 +2,7 @@ package project.mapjiri.global.client.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 import java.util.List;
@@ -9,6 +10,7 @@ import java.util.List;
 
 @Getter
 @JsonIgnoreProperties(ignoreUnknown = true)
+@AllArgsConstructor
 public class KakaoAddressResponseDto {
 
     @JsonProperty("documents")
@@ -16,6 +18,7 @@ public class KakaoAddressResponseDto {
 
     @Getter
     @JsonIgnoreProperties(ignoreUnknown = true)
+    @AllArgsConstructor
     public static class Documents {
 
         @JsonProperty("region_type")
