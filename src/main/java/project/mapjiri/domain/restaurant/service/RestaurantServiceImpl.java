@@ -47,7 +47,7 @@ public class RestaurantServiceImpl implements RestaurantService {
 
             // 식당 후기 정보 저장
             List<ReviewCreateResponseDto> reviewsDtoList = singleDto.getReviews();
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd.");
             List<Review> reviews = new ArrayList<>();
             for(ReviewCreateResponseDto singleReviewDto : reviewsDtoList){
                 Review review = Review.of(singleReviewDto.getReviewText(), singleReviewDto.getRating(), LocalDate.parse(singleReviewDto.getDate(), formatter), singleReviewDto.getPhotoUrl(), savedRestaurant);
