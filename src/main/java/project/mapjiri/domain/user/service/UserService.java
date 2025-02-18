@@ -17,6 +17,8 @@ import project.mapjiri.domain.user.dto.response.SignUpResponseDto;
 import project.mapjiri.domain.user.model.User;
 import project.mapjiri.domain.user.provider.JwtTokenProvider;
 import project.mapjiri.domain.user.repository.UserRepository;
+import project.mapjiri.global.exception.MyErrorCode;
+import project.mapjiri.global.exception.MyException;
 
 @Service
 @RequiredArgsConstructor
@@ -30,16 +32,16 @@ public class UserService {
     public SignUpResponseDto signUp(SignUpRequestDto requestDto) {
         String email = requestDto.getEmail();
         if (userRepository.existsByEmail(email)) {
-            throw new IllegalArgumentException("이미 존재하는 이메일입니다.");
+            throw new MyException(MyErrorCode.ALREADY_EMAIL);
         }
 
         if (!redisService.isMailVerified(email)) {
-            throw new IllegalArgumentException("이메일 인증이 필요합니다.");
+            throw new MyException(MyErrorCode.EMAIL_VERIFICATION_REQUIRED);
         }
 
         String username = requestDto.getUsername();
         if (userRepository.existsByUsername(username)) {
-            throw new IllegalArgumentException("이미 존재하는 닉네임입니다.");
+            throw new MyException(MyErrorCode.DUPLICATE_USERNAME);
         }
 
         String password = requestDto.getPassword();
@@ -53,14 +55,15 @@ public class UserService {
 
     public SignInResponseDto signIn(SignInRequestDto request) {
         User user = userRepository.findByEmail(request.getEmail())
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 이메일입니다."));
+                .orElseThrow(() -> new MyException(MyErrorCode.NOT_FOUND_EMAIL));
 
-        String password = user.getPassword();
-        // 암호화된 비밀번호
-        String encodedPassword = passwordEncoder.encode(password);
+        // 사용자가 입력한 패스워드
+        String rawPassword = request.getPassword();
+        // 회원가입 할 때 입력한 패스워드 (암호화되어 있는 상태)
+        String storedPassword = user.getPassword();
 
-        if (!passwordEncoder.matches(password, encodedPassword)) {
-            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+        if (!passwordEncoder.matches(rawPassword, storedPassword)) {
+            throw new MyException(MyErrorCode.INVALID_PASSWORD);
         }
 
         String accessToken = jwtTokenProvider.createAccessToken(user.getEmail());
@@ -75,14 +78,14 @@ public class UserService {
         String refreshToken = request.getRefreshToken();
 
         if (!jwtTokenProvider.validateToken(refreshToken)) {
-            throw new IllegalArgumentException("유효하지 않은 Refresh Token 입니다.");
+            throw new MyException(MyErrorCode.INVALID_REFRESH_TOKEN);
         }
 
         String email = jwtTokenProvider.getEmailfromToken(refreshToken);
         String getRefreshToken = redisService.getRefreshToken(email);
 
         if (getRefreshToken == null || !getRefreshToken.equals(refreshToken)) {
-            throw new IllegalArgumentException("이미 만료된 Refresh Token 입니다.");
+            throw new MyException(MyErrorCode.EXPIRED_REFRESH_TOKEN);
         }
 
         String newAccessToken = jwtTokenProvider.createAccessToken(email);
@@ -105,7 +108,7 @@ public class UserService {
     public User findUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null || !authentication.isAuthenticated() || authentication.getPrincipal().equals("anonymousUser")) {
-            throw new IllegalStateException("인증된 사용자가 없습니다.");
+            throw new MyException(MyErrorCode.UNAUTHENTICATED_USER);
         }
 
         return (User) authentication.getPrincipal();
