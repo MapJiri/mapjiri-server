@@ -29,7 +29,8 @@ public class ReviewServiceImpl implements ReviewService {
                 Sort.by(reviewSort.getDirection(), reviewSort.getField()));
 
         Page<Review> page = reviewRepository.findReviewsByRestaurantId(id, pageRequest);
-        Double averageReviewScore = reviewRepository.findAverageReviewPointByRestaurantId(id);
+        Double averageReviewScore = reviewRepository.findAverageReviewPointByRestaurantId(id)
+                .orElse(0.0);
 
         return ReviewListResponse.of(
                 averageReviewScore,
