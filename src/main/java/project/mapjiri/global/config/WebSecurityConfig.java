@@ -11,6 +11,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import project.mapjiri.domain.user.filter.JwtAuthenticationFilter;
+import project.mapjiri.domain.user.model.Role;
 import project.mapjiri.domain.user.provider.JwtTokenProvider;
 
 @Configuration
@@ -24,11 +25,15 @@ public class WebSecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/api/v1/star/**").hasRole(Role.USER.name())
+                        .requestMatchers("/api/v1/user/logout"
+                                , "api/v1/user/access-token").authenticated()
+
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/static/swagger-ui/**").permitAll()
-                        .requestMatchers("/api/v1/user/signin", "/api/v1/user/signup").permitAll()
-                        .anyRequest().authenticated()
+                        .anyRequest().permitAll()
                 )
-                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider),
+                        UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 }
