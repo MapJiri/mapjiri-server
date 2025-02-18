@@ -1,8 +1,7 @@
-package project.mapjiri.domain.restaurant.service;
+package project.mapjiri.domain.restaurant.dto;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import project.mapjiri.domain.restaurant.model.Restaurant;
 
 import java.util.List;
 

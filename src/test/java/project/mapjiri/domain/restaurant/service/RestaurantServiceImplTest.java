@@ -7,6 +7,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 import project.mapjiri.domain.restaurant.dto.RestaurantCreateRequestDto;
 import project.mapjiri.domain.restaurant.dto.RestaurantListCreateRequestDto;
+import project.mapjiri.domain.restaurant.dto.RestaurantListCreateResponseDto;
 import project.mapjiri.domain.review.dto.ReviewCreateResponseDto;
 
 import java.util.HashMap;
@@ -35,20 +36,20 @@ class RestaurantServiceImplTest {
         tags1.put("청결", "2");
 
         List<ReviewCreateResponseDto> reviewList1 = List.of(
-                new ReviewCreateResponseDto("이 집이 최고입니다1", 100, "2025.02.05", "https://img1.kakaocdn.net/cthumb"),
-                new ReviewCreateResponseDto("이 집이 최고입니다2", 20, "2025.01.02", null),
-                new ReviewCreateResponseDto("이 집이 최고입니다3", 20, "2025.01.01", null),
-                new ReviewCreateResponseDto("이 집이 최고입니다4", 60, "2025.01.27", null),
-                new ReviewCreateResponseDto("이 집이 최고입니다5", 80, "2025.02.03", null)
+                new ReviewCreateResponseDto("이 집이 최고입니다1", 100, "2025.02.05.", "https://img1.kakaocdn.net/cthumb"),
+                new ReviewCreateResponseDto("이 집이 최고입니다2", 20, "2025.01.02.", null),
+                new ReviewCreateResponseDto("이 집이 최고입니다3", 20, "2025.01.01.", null),
+                new ReviewCreateResponseDto("이 집이 최고입니다4", 60, "2025.01.27.", null),
+                new ReviewCreateResponseDto("이 집이 최고입니다5", 80, "2025.02.03.", null)
         );
 
         List<ReviewCreateResponseDto> reviewList2 = List.of(
-                new ReviewCreateResponseDto("좋아해요1", 0, "2025.02.01", null),
-                new ReviewCreateResponseDto("좋아해요2", 20, "2025.02.02", null),
-                new ReviewCreateResponseDto("좋아해요3", 40, "2025.02.03", "이미지 URL"),
-                new ReviewCreateResponseDto("좋아해요4", 20, "2025.02.04", null),
-                new ReviewCreateResponseDto("좋아해요5", 60, "2025.02.05", null),
-                new ReviewCreateResponseDto("싫은데 좋아요", 60, "2025.02.05", "URL1234")
+                new ReviewCreateResponseDto("좋아해요1", 0, "2025.02.01.", null),
+                new ReviewCreateResponseDto("좋아해요2", 20, "2025.02.02.", null),
+                new ReviewCreateResponseDto("좋아해요3", 40, "2025.02.03.", "이미지 URL"),
+                new ReviewCreateResponseDto("좋아해요4", 20, "2025.02.04.", null),
+                new ReviewCreateResponseDto("좋아해요5", 60, "2025.02.05.", null),
+                new ReviewCreateResponseDto("싫은데 좋아요", 60, "2025.02.05.", "URL1234")
         );
 
         List<RestaurantCreateRequestDto> restaurantList = List.of(
