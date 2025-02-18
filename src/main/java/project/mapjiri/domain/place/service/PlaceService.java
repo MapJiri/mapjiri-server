@@ -2,12 +2,14 @@ package project.mapjiri.domain.place.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import project.mapjiri.domain.place.model.Place;
 import project.mapjiri.domain.place.repository.PlaceRepository;
 import project.mapjiri.global.dto.ResponseDto;
 import project.mapjiri.global.exception.MyErrorCode;
 import project.mapjiri.global.exception.MyException;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -30,4 +32,12 @@ public class PlaceService {
         }
         return dongNameList;
     }
+
+    public Place findPlace(String dong) {
+        Optional<Place> place = placeRepository.findByDong(dong);
+
+        return placeRepository.findByDong(dong)
+                .orElseThrow(() -> new MyException(MyErrorCode.NOT_FOUND_PLACE));
+    }
+
 }

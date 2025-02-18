@@ -30,4 +30,10 @@ public class MenuController {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(ResponseDto.of(menuService.getMenuName(menuType),"메뉴 목록 반환 성공"));
     }
+
+    @GetMapping("/find-type")
+    public ResponseEntity<ResponseDto<String>> findMenuType(@RequestParam("menuName") String menuName){
+        return  ResponseEntity.status(HttpStatus.OK)
+                .body(ResponseDto.of(menuService.findMenu(menuName).getMenuType(),"메뉴 이름 반환 성공"));
+    }
 }
