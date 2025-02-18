@@ -55,7 +55,7 @@ public class WebSecurityConfig {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(List.of(
                 // Netlify에서 배포된 프론트엔드
-                "https://vermillion-hamster-7868b5.netlify.app"
+                "https://mapjiri.netlify.app"
         ));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
