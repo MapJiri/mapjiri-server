@@ -109,7 +109,7 @@ public class UserServiceTest {
         assertEquals(signUpRequestDto.getEmail(), response.getEmail());
         assertEquals(signUpRequestDto.getUsername(), response.getUsername());
 
-        verify(passwordEncoder, times(2)).encode(signUpRequestDto.getPassword());
+        verify(passwordEncoder, times(1)).encode(signUpRequestDto.getPassword());
         verify(userRepository, times(1)).save(any(User.class));
     }
 
