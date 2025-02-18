@@ -37,7 +37,10 @@ class ReviewServiceImplTest {
     @TestFactory
     Collection<DynamicTest> getReviewsByRestaurant() {
         // given
-        Restaurant restaurant1 = Restaurant.of("식당1/대전 둔산동 242-5 1층", Tag.of("맛", 5));
+        String name = "식당1";
+        String address = "대전 둔산동 242-5 1층";
+        String uniqueKey = name + "/" + address;
+        Restaurant restaurant1 = Restaurant.of(uniqueKey, Tag.of("맛", 5));
         restaurantRepository.saveAndFlush(restaurant1);
 
         List<Review> reviews = new ArrayList<>();
@@ -58,7 +61,7 @@ class ReviewServiceImplTest {
                 DynamicTest.dynamicTest("오래된순으로 리뷰 목록 페이지를 조회합니다.", () -> {
 
                     //when
-                    ReviewListResponse result = reviewService.getReviewsByRestaurant(restaurant1.getRestaurantId(), "oldest", 0);
+                    ReviewListResponse result = reviewService.getReviewsByRestaurant(name, address, "oldest", 0);
                     // then
                     List<ReviewResponse> responseList = result.getResponseList();
                     assertThat(responseList)
@@ -84,7 +87,7 @@ class ReviewServiceImplTest {
                 DynamicTest.dynamicTest("최신순으로 리뷰 목록 페이지를 조회합니다.", () -> {
 
                     //when
-                    ReviewListResponse result = reviewService.getReviewsByRestaurant(restaurant1.getRestaurantId(), "lastest", 0);
+                    ReviewListResponse result = reviewService.getReviewsByRestaurant(name, address, "lastest", 0);
                     // then
                     List<ReviewResponse> responseList = result.getResponseList();
                     assertThat(responseList)
@@ -110,7 +113,7 @@ class ReviewServiceImplTest {
                 DynamicTest.dynamicTest("별점 높은 순으로 리뷰 목록 페이지를 조회합니다.", () -> {
 
                     //when
-                    ReviewListResponse result = reviewService.getReviewsByRestaurant(restaurant1.getRestaurantId(), "high_score", 1);
+                    ReviewListResponse result = reviewService.getReviewsByRestaurant(name, address, "high_score", 1);
                     // then
 
                     List<ReviewResponse> responseList = result.getResponseList();
