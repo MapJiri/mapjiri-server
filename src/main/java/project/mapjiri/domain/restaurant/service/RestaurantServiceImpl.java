@@ -3,7 +3,9 @@ package project.mapjiri.domain.restaurant.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import project.mapjiri.domain.restaurant.dto.RestaurantCreateRequestDto;
+import project.mapjiri.domain.restaurant.dto.RestaurantCreateResponseDto;
 import project.mapjiri.domain.restaurant.dto.RestaurantListCreateRequestDto;
+import project.mapjiri.domain.restaurant.dto.RestaurantListCreateResponseDto;
 import project.mapjiri.domain.restaurant.model.Restaurant;
 import project.mapjiri.domain.restaurant.model.RestaurantRepository;
 import project.mapjiri.domain.restaurant.model.Tag;
@@ -45,7 +47,7 @@ public class RestaurantServiceImpl implements RestaurantService {
 
             // 식당 후기 정보 저장
             List<ReviewCreateResponseDto> reviewsDtoList = singleDto.getReviews();
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd.");
             List<Review> reviews = new ArrayList<>();
             for(ReviewCreateResponseDto singleReviewDto : reviewsDtoList){
                 Review review = Review.of(singleReviewDto.getReviewText(), singleReviewDto.getRating(), LocalDate.parse(singleReviewDto.getDate(), formatter), singleReviewDto.getPhotoUrl(), savedRestaurant);

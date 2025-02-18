@@ -6,8 +6,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import project.mapjiri.domain.restaurant.dto.RestaurantListCreateRequestDto;
-import project.mapjiri.domain.restaurant.service.RestaurantCreateResponseDto;
-import project.mapjiri.domain.restaurant.service.RestaurantListCreateResponseDto;
+import project.mapjiri.domain.restaurant.dto.RestaurantListCreateResponseDto;
 import project.mapjiri.domain.restaurant.service.RestaurantService;
 import project.mapjiri.global.dto.ResponseDto;
 

@@ -15,12 +15,13 @@ public class ReviewController {
     private final ReviewService reviewService;
 
     @GetMapping("/restaurant")
-    public ResponseDto<?> getReviewsByRestaurant(@RequestParam(name = "restaurantId") Long id
+    public ResponseDto<?> getReviewsByRestaurant(@RequestParam String name
+            , @RequestParam String address
             , @RequestParam(defaultValue = "latest", required = false) String sort
             , @RequestParam(defaultValue = "1", required = false) int pageNumber) {
         pageNumber = pageNumber <= 0 ? 0 : pageNumber - 1;
 
-        return ResponseDto.of(reviewService.getReviewsByRestaurant(id, sort, pageNumber), "리뷰 목록 조회 성공");
+        return ResponseDto.of(reviewService.getReviewsByRestaurant(name, address, sort, pageNumber), "리뷰 목록 조회 성공");
     }
 
 

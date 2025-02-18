@@ -28,7 +28,8 @@ public enum MyErrorCode {
     INVALID_PASSWORD(HttpStatus.BAD_REQUEST, "비밀번호가 일치하지 않습니다."),
     INVALID_REFRESH_TOKEN(HttpStatus.UNAUTHORIZED, "유효하지 않은 Refresh Token 입니다."),
     EXPIRED_REFRESH_TOKEN(HttpStatus.UNAUTHORIZED, "이미 만료된 Refresh Token 입니다."),
-    UNAUTHENTICATED_USER(HttpStatus.UNAUTHORIZED, "인증된 사용자가 없습니다.");
+    UNAUTHENTICATED_USER(HttpStatus.UNAUTHORIZED, "인증된 사용자가 없습니다."),
+    NOT_FOUNT_RESTAURANT(HttpStatus.NOT_FOUND, "존재하지 않는 가게입니다.");
 
     private final HttpStatus status;
     private final String message;
