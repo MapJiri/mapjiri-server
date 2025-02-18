@@ -35,9 +35,11 @@ public class UserService {
             throw new MyException(MyErrorCode.ALREADY_EMAIL);
         }
 
+        System.out.println("email = " + email);
         if (!redisService.isMailVerified(email)) {
             throw new MyException(MyErrorCode.EMAIL_VERIFICATION_REQUIRED);
         }
+        
 
         String username = requestDto.getUsername();
         if (userRepository.existsByUsername(username)) {
@@ -111,6 +113,9 @@ public class UserService {
             throw new MyException(MyErrorCode.UNAUTHENTICATED_USER);
         }
 
-        return (User) authentication.getPrincipal();
+        User user = (User) authentication.getPrincipal();
+
+        return userRepository.findByEmail(user.getEmail())
+                .orElseThrow(() -> new MyException(MyErrorCode.NOT_FOUND_USER));
     }
 }

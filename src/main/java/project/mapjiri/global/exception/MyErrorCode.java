@@ -18,7 +18,7 @@ public enum MyErrorCode {
     NOT_FOUND_FAVORITE_MENU(HttpStatus.NOT_FOUND,"즐겨찾기에 등록되지 않은 메뉴 입니다." ),
     NOT_FOUND_PLACE(HttpStatus.NOT_FOUND,"등록된 위치가 없습니다."),
     NOT_FOUND_MENU(HttpStatus.NOT_FOUND,"등록된 메뉴가 없습니다."),
-    NOT_FOUND_CSVFILE(HttpStatus.NOT_FOUND,"CSV 파일을 찾을 수 없습니다."),
+    NOT_FOUND_USER(HttpStatus.NOT_FOUND,"등록된 사용자가 아닙니다." ),
     INVALID_VERIFICATION_CODE(HttpStatus.BAD_REQUEST, "인증 번호가 일치하지 않습니다."),
     EXPIRED_OR_NOT_FOUND_VERIFICATION_CODE(HttpStatus.NOT_FOUND, "인증 번호가 만료되었거나 존재하지 않습니다."),
     EMAIL_VERIFICATION_REQUIRED(HttpStatus.UNAUTHORIZED, "이메일 인증이 필요합니다."),
