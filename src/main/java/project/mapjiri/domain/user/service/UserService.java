@@ -1,10 +1,17 @@
 package project.mapjiri.domain.user.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpHeaders;
+import io.netty.handler.codec.http.HttpMethod;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.client.RestTemplate;
 import project.mapjiri.domain.user.dto.request.LogoutRequestDto;
 import project.mapjiri.domain.user.dto.request.RefreshAccessTokenRequestDto;
 import project.mapjiri.domain.user.dto.request.SignInRequestDto;
@@ -22,6 +29,11 @@ public class UserService {
     private final UserRepository userRepository;
     private final JwtTokenProvider jwtTokenProvider;
     private final RedisService redisService;
+
+    @Autowired
+    private final RestTemplate restTemplate; //카카오 로그아웃 API호출용
+
+    private static final String KAKAO_LOGOUT_URL = "https://kapi.kakao.com/v1/user/logout";
 
     private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
@@ -84,15 +96,49 @@ public class UserService {
         return new RefreshAccessTokenResponseDto(newAccessToken, getRefreshToken);
     }
 
-    public void logout(@RequestBody LogoutRequestDto request) {
-        String refreshToken = request.getRefreshToken();
-        String accessToken = request.getAccessToken();
+    public void logout(LogoutRequestDto logoutRequestDto) {
+        String accessToken = logoutRequestDto.getAccessToken();
+        if (accessToken != null) {
+            redisService.deleteRefreshToken(jwtTokenProvider.getEmailfromToken(accessToken));
+        }
 
-        // RefreshToken 삭제
-        String email = jwtTokenProvider.getEmailfromToken(refreshToken);
-        redisService.deleteRefreshToken(email);
+        if (logoutRequestDto.getKakaoAccessToken() != null) {
+            logoutFromKakao(logoutRequestDto.getKakaoAccessToken());
+        }
+    }
 
-        // AccessToken 블랙 리스트 추가
-        redisService.addToBlacklist(accessToken);
+
+    private void logoutFromKakao(String kakaoAccessToken) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", "Bearer " + kakaoAccessToken);
+
+        HttpEntity<Void> requestEntity = new HttpEntity<>(headers);
+        ResponseEntity<String> response = restTemplate.exchange(
+                KAKAO_LOGOUT_URL, org.springframework.http.HttpMethod.POST, requestEntity, String.class
+        );
+
+        if (!response.getStatusCode().is2xxSuccessful()) {
+            throw new RuntimeException("카카오 로그아웃 실패");
+        }
+    }
+
+    public SignInResponseDto autoLogin(String accessToken) {
+        if (!jwtTokenProvider.validateToken(accessToken)) {
+            throw new IllegalArgumentException("유효하지 않은 Access Token 입니다.");
+        }
+
+        String email = jwtTokenProvider.getEmailfromToken(accessToken);
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
+
+        return new SignInResponseDto(accessToken, redisService.getRefreshToken(email));
+    }
+}
+
+@Configuration
+class RestTemplateConfig {
+    @Bean
+    public RestTemplate restTemplate() {
+        return new RestTemplate();
     }
 }

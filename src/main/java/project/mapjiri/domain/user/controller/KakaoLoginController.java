@@ -19,19 +19,12 @@ public class KakaoLoginController {
     private final KakaoService kakaoService;
 
     @GetMapping("/callback")
-    // public ResponseEntity<?> kakaoCallback(@RequestParam("code") String code) { //수정 전 코드
-    public KakaoUserInfoResponseDto kakaoCallback(@RequestParam("code") String code) {
+    public ResponseEntity<String> kakaoCallback(@RequestParam("code") String code) {
         log.info("카카오 인가 코드 수신: {}", code);
+        String jwtToken = kakaoService.handleKakaoLogin(code);
+        log.info("JWT 토큰 발급 완료: {}", jwtToken);
 
-        // ✅ 인수 1개만 전달
-        String accessToken = kakaoService.getKakaoAccessToken(code);
-        log.info("카카오 액세스 토큰: {}", accessToken);
-
-        // ✅ 인수 1개만 전달
-        KakaoUserInfoResponseDto userInfo = kakaoService.getUserInfo(accessToken);
-        log.info("카카오 사용자 정보: {}", userInfo);
-
-        // return ResponseEntity.ok(userInfo); //수정전 코드
-        return userInfo;
+        return ResponseEntity.ok(jwtToken);  // 클라이언트에서 받아서 저장 후 사용
     }
 }
+

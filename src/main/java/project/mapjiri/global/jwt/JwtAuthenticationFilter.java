@@ -27,18 +27,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws ServletException, IOException {
-        String token = resolveToken(request);
 
-        if (StringUtils.hasText(token) && jwtTokenProvider.validateToken(token)) {
-            Claims claims = jwtTokenProvider.getClaims(token); // ✅ JwtTokenProvider에 getClaims 메서드가 있는지 확인 필요!
+        HttpServletRequest httpServletRequest = (HttpServletRequest) request;
+        String token = resolveToken(httpServletRequest);
 
-            UserDetails userDetails = User.withUsername(claims.getSubject())
-                    .password("")
-                    .authorities("USER")
-                    .build();
-
-            SecurityContextHolder.getContext().setAuthentication(
-                    new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities()));
+        // **토큰이 존재하고 유효하면 인증 정보 설정**
+        if (token != null && jwtTokenProvider.validateToken(token)) {
+            var authentication = jwtTokenProvider.getAuthentication(jwtTokenProvider.getEmailfromToken(token));
+            SecurityContextHolder.getContext().setAuthentication(authentication);
         }
         chain.doFilter(request, response);
     }

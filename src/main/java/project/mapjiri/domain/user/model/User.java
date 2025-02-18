@@ -1,16 +1,17 @@
 package project.mapjiri.domain.user.model;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import static lombok.AccessLevel.PROTECTED;
+import static lombok.AccessLevel.PUBLIC;
 
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor(access = PROTECTED)
+@Builder
+@AllArgsConstructor(access = PUBLIC)
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,7 +24,7 @@ public class User {
     private String email;
 
     @Column(nullable = true)
-    private String password;
+    private String password = "";
 
     @Column(nullable = false)
     private String username;
@@ -56,6 +57,7 @@ public class User {
         this.profileImage = profileImage;
         this.role = Role.USER;
         this.loginType = LoginType.KAKAO;
+        this.password = ""; // 빈 문자열로 설정해 NULL방지
     }
 
     public void updateKakaoInfo(String kakaoId, String profileImage) {

@@ -3,10 +3,7 @@ package project.mapjiri.domain.user.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import project.mapjiri.domain.user.dto.request.LogoutRequestDto;
 import project.mapjiri.domain.user.dto.request.RefreshAccessTokenRequestDto;
 import project.mapjiri.domain.user.dto.request.SignInRequestDto;
@@ -47,7 +44,17 @@ public class UserController {
     }
 
     @PostMapping("/logout")
-    public void logout(@RequestBody LogoutRequestDto request) {
-        userService.logout(request);
+    public ResponseEntity<String> logout(@RequestHeader("Authorization") String token) {
+        String accessToken = token.substring(7); // "Bearer " 제거
+        LogoutRequestDto logoutRequestDto = new LogoutRequestDto(accessToken);
+        userService.logout(logoutRequestDto);
+        return ResponseEntity.ok("로그아웃 성공");
     }
+
+    @GetMapping("/auth/auto-login")
+    public ResponseEntity<SignInResponseDto> autoLogin(@RequestHeader("Authorization") String token) {
+        String accessToken = token.substring(7);  // "Bearer " 제거
+        return ResponseEntity.ok(userService.autoLogin(accessToken));
+    }
+
 }
