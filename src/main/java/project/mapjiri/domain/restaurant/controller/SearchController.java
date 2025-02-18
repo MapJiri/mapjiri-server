@@ -34,4 +34,10 @@ public class SearchController {
     public ResponseEntity<ResponseDto<List<SearchRankingResponseDto>>> searchRankings() {
          return ResponseEntity.status(HttpStatus.OK).body(ResponseDto.of(searchService.getRankings(), "실시간 검색 키워드 랭킹 조회 성공"));
     }
+
+    @PostMapping("/rankings/increment")
+    public ResponseEntity<ResponseDto<Void>> incrementRankings(@RequestParam String keyword) {
+        searchService.incrementSearchCount(keyword);
+        return ResponseEntity.status(HttpStatus.CREATED).body(ResponseDto.of(null, "검색 횟수 반영 성공"));
+    }
 }
