@@ -22,7 +22,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 class SearchControllerTest extends RestDocsSupport {
 
-    private static final String BABE_SEARCH_URL = "/api/v1/search";
+    private static final String BASE_SEARCH_URL = "/api/v1/search";
     private static final String TEST_ACCESS_TOKEN = "Bearer testAccessToken";
     private static final Double TEST_LONGITUDE = 127.3346;
     private static final Double TEST_LATITUDE = 36.3588;
@@ -46,7 +46,7 @@ class SearchControllerTest extends RestDocsSupport {
 
         //when
         ResultActions actions = mockMvc.perform(
-                get(BABE_SEARCH_URL + "/rankings")
+                get(BASE_SEARCH_URL + "/rankings")
                         .header(AUTHORIZATION, TEST_ACCESS_TOKEN)
                         .contentType(MediaType.APPLICATION_JSON));
 
@@ -77,7 +77,7 @@ class SearchControllerTest extends RestDocsSupport {
 
         //when
         ResultActions actions = mockMvc.perform(
-                get(BABE_SEARCH_URL + "/nearby")
+                get(BASE_SEARCH_URL + "/nearby")
                         .param("longitude", String.valueOf(TEST_LONGITUDE))
                         .param("latitude", String.valueOf(TEST_LATITUDE))
                         .header(AUTHORIZATION, TEST_ACCESS_TOKEN)
@@ -120,7 +120,7 @@ class SearchControllerTest extends RestDocsSupport {
 
         //when
         ResultActions actions = mockMvc.perform(
-                get(BABE_SEARCH_URL + "/nearby")
+                get(BASE_SEARCH_URL + "/nearby")
                         .param("longitude", String.valueOf(TEST_LONGITUDE))
                         .param("latitude", String.valueOf(TEST_LATITUDE))
                         .param("keyword", keyword)
