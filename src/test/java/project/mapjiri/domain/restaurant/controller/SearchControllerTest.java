@@ -9,26 +9,23 @@ import org.springframework.test.web.servlet.ResultActions;
 import project.mapjiri.domain.restaurant.dto.NearbyRestaurantsResponseDto;
 import project.mapjiri.domain.restaurant.dto.SearchRankingResponseDto;
 import project.mapjiri.global.client.dto.KakaoNearbyRestaurantResponseDto;
-import project.mapjiri.support.annotation.WithMockCustom;
 import project.module.RestDocsSupport;
 
 import java.util.Arrays;
 import java.util.List;
 
-import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 class SearchControllerTest extends RestDocsSupport {
 
     private static final String BASE_SEARCH_URL = "/api/v1/search";
-    private static final String TEST_ACCESS_TOKEN = "Bearer testAccessToken";
     private static final Double TEST_LONGITUDE = 127.3346;
     private static final Double TEST_LATITUDE = 36.3588;
 
     @Test
-    @WithMockCustom(role = "USER")
     void API_실시간_랭킹() throws Exception {
         //given
         Mockito.when(searchService.getRankings()).thenReturn(List.of(
@@ -47,7 +44,6 @@ class SearchControllerTest extends RestDocsSupport {
         //when
         ResultActions actions = mockMvc.perform(
                 get(BASE_SEARCH_URL + "/rankings")
-                        .header(AUTHORIZATION, TEST_ACCESS_TOKEN)
                         .contentType(MediaType.APPLICATION_JSON));
 
         //then
@@ -69,7 +65,6 @@ class SearchControllerTest extends RestDocsSupport {
     }
 
     @Test
-    @WithMockCustom(role = "USER")
     void API_근처_음식점_조회() throws Exception {
         //given
         Mockito.when(kakaoMapClient.findNearbyRestaurants(TEST_LONGITUDE, TEST_LATITUDE))
@@ -78,9 +73,8 @@ class SearchControllerTest extends RestDocsSupport {
         //when
         ResultActions actions = mockMvc.perform(
                 get(BASE_SEARCH_URL + "/nearby")
-                        .param("longitude", String.valueOf(TEST_LONGITUDE))
-                        .param("latitude", String.valueOf(TEST_LATITUDE))
-                        .header(AUTHORIZATION, TEST_ACCESS_TOKEN)
+                        .queryParam("longitude", String.valueOf(TEST_LONGITUDE))
+                        .queryParam("latitude", String.valueOf(TEST_LATITUDE))
                         .contentType(MediaType.APPLICATION_JSON));
 
         //then
@@ -111,7 +105,6 @@ class SearchControllerTest extends RestDocsSupport {
     }
 
     @Test
-    @WithMockCustom(role = "USER")
     void API_키워드_기반_음식점_조회 () throws Exception {
         //given
         String keyword = "돈까스";
@@ -121,10 +114,9 @@ class SearchControllerTest extends RestDocsSupport {
         //when
         ResultActions actions = mockMvc.perform(
                 get(BASE_SEARCH_URL + "/nearby")
-                        .param("longitude", String.valueOf(TEST_LONGITUDE))
-                        .param("latitude", String.valueOf(TEST_LATITUDE))
-                        .param("keyword", keyword)
-                        .header(AUTHORIZATION, TEST_ACCESS_TOKEN)
+                        .queryParam("longitude", String.valueOf(TEST_LONGITUDE))
+                        .queryParam("latitude", String.valueOf(TEST_LATITUDE))
+                        .queryParam("keyword", keyword)
                         .contentType(MediaType.APPLICATION_JSON));
 
         //then
@@ -150,6 +142,37 @@ class SearchControllerTest extends RestDocsSupport {
                                         fieldWithPath("data.restaurantLists[].phoneNumber").description("음식점 전화 번호").type(JsonFieldType.STRING),
                                         fieldWithPath("data.restaurantLists[].longitude").description("음식점 위치 x 좌표").type(JsonFieldType.NUMBER),
                                         fieldWithPath("data.restaurantLists[].latitude").description("음식점 위치 y 좌표").type(JsonFieldType.NUMBER),
+                                        fieldWithPath("msg").description("성공 응답 메세지").type(JsonFieldType.STRING)
+                                ).build())
+                ));
+    }
+
+    @Test
+    void API_검색_키워드_랭킹_반영() throws Exception {
+        //given
+        String keyword = "돈까스";
+        Mockito.doNothing().when(searchService).incrementSearchCount(keyword);
+
+        //when
+        ResultActions actions = mockMvc.perform(
+                post(BASE_SEARCH_URL + "/rankings/increment")
+                        .queryParam("keyword", keyword)
+                        .contentType(MediaType.APPLICATION_JSON));
+
+        //then
+        actions
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.data").isEmpty())
+                .andExpect(jsonPath("$.msg").value("검색 횟수 반영 성공"))
+                .andDo(restDocsHandler.document(
+                        ResourceDocumentation.resource(ResourceSnippetParameters.builder()
+                                .tag("Search")
+                                .summary("검색 키워드 반영")
+                                .queryParameters(
+                                        ResourceDocumentation.parameterWithName("keyword").description("검색 키워드").type(SimpleType.STRING)
+                                )
+                                .responseFields(
+                                        fieldWithPath("data").description("응답 데이터 (null)").type(JsonFieldType.NULL),
                                         fieldWithPath("msg").description("성공 응답 메세지").type(JsonFieldType.STRING)
                                 ).build())
                 ));
