@@ -16,6 +16,8 @@ import project.mapjiri.domain.user.dto.response.SignUpResponseDto;
 import project.mapjiri.domain.user.model.User;
 import project.mapjiri.domain.user.provider.JwtTokenProvider;
 import project.mapjiri.domain.user.repository.UserRepository;
+import project.mapjiri.global.exception.MyErrorCode;
+import project.mapjiri.global.exception.MyException;
 
 import java.util.Optional;
 
@@ -109,41 +111,53 @@ public class UserServiceTest {
         assertEquals(signUpRequestDto.getEmail(), response.getEmail());
         assertEquals(signUpRequestDto.getUsername(), response.getUsername());
 
-        verify(passwordEncoder, times(2)).encode(signUpRequestDto.getPassword());
+        verify(passwordEncoder, times(1)).encode(signUpRequestDto.getPassword());
         verify(userRepository, times(1)).save(any(User.class));
     }
 
-    @Test()
-    void 회원가인_이메일_중복_실패() {
+    @Test
+    void 회원가입_이메일_중복_실패() {
+        // 이메일이 이미 존재한다고 설정
         when(userRepository.existsByEmail(signUpRequestDto.getEmail())).thenReturn(true);
 
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> userService.signUp(signUpRequestDto));
-        assertEquals("이미 존재하는 이메일입니다.", exception.getMessage());
+        // 예외가 발생하는지 검증 (IllegalArgumentException -> MyException으로 변경)
+        MyException exception = assertThrows(MyException.class, () -> userService.signUp(signUpRequestDto));
 
+        // 예외 코드와 메시지 검증
+        assertEquals(MyErrorCode.ALREADY_EMAIL, exception.getErrorCode());
+        assertEquals("이미 존재하는 이메일입니다.", exception.getErrorCode().getMessage());
+
+        // 이메일 중복 시, 인증 여부 및 저장 로직은 실행되지 않아야 함
         verify(redisService, never()).isMailVerified(anyString());
         verify(userRepository, never()).save(any(User.class));
     }
 
-    @Test()
+
+    @Test
     void 회원가입_이메일_인증_실패() {
         when(userRepository.existsByEmail(signUpRequestDto.getEmail())).thenReturn(false);
         when(redisService.isMailVerified(signUpRequestDto.getEmail())).thenReturn(false);
 
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> userService.signUp(signUpRequestDto));
-        assertEquals("이메일 인증이 필요합니다.", exception.getMessage());
+        MyException exception = assertThrows(MyException.class, () -> userService.signUp(signUpRequestDto));
+
+        assertEquals(MyErrorCode.EMAIL_VERIFICATION_REQUIRED, exception.getErrorCode());
+        assertEquals("이메일 인증이 필요합니다.", exception.getErrorCode().getMessage());
 
         verify(userRepository, never()).existsByUsername(anyString());
         verify(userRepository, never()).save(any(User.class));
     }
 
-    @Test()
+
+    @Test
     void 회원가입_닉네임_중복_실패() {
         when(userRepository.existsByEmail(signUpRequestDto.getEmail())).thenReturn(false);
         when(redisService.isMailVerified(signUpRequestDto.getEmail())).thenReturn(true);
         when(userRepository.existsByUsername(signUpRequestDto.getUsername())).thenReturn(true);
 
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> userService.signUp(signUpRequestDto));
-        assertEquals("이미 존재하는 닉네임입니다.", exception.getMessage());
+        MyException exception = assertThrows(MyException.class, () -> userService.signUp(signUpRequestDto));
+
+        assertEquals(MyErrorCode.DUPLICATE_USERNAME, exception.getErrorCode());
+        assertEquals("이미 존재하는 닉네임입니다.", exception.getErrorCode().getMessage());
 
         verify(userRepository, never()).save(any(User.class));
     }
