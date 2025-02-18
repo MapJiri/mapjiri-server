@@ -7,6 +7,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 import project.mapjiri.domain.restaurant.dto.RestaurantCreateRequestDto;
 import project.mapjiri.domain.restaurant.dto.RestaurantListCreateRequestDto;
+import project.mapjiri.domain.restaurant.dto.RestaurantListCreateResponseDto;
 import project.mapjiri.domain.review.dto.ReviewCreateResponseDto;
 
 import java.util.HashMap;
