@@ -38,8 +38,6 @@ dependencies {
     // CSV 파일 파싱
     implementation 'org.apache.commons:commons-csv:1.10.0'
 
-    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf:3.4.2'
-
     compileOnly 'org.projectlombok:lombok'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
 
