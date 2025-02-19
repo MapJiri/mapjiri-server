@@ -34,7 +34,7 @@ public class ReviewServiceImpl implements ReviewService {
                 Sort.by(reviewSort.getDirection(), reviewSort.getField()));
 
         String uniqueKey = name+ "/" + address;
-        Restaurant findRestaurant = restaurantRepository.findByUniqueKey(uniqueKey)
+        Restaurant findRestaurant = restaurantRepository.findFirstByUniqueKey(uniqueKey)
                 .orElseThrow(() -> new MyException(MyErrorCode.INVALID_VERIFICATION_CODE));
         Page<Review> page = reviewRepository.findReviewsByRestaurantId(findRestaurant.getRestaurantId(), pageRequest);
         Double averageReviewScore = reviewRepository.findAverageReviewPointByRestaurantId(findRestaurant.getRestaurantId())
