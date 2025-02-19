@@ -8,15 +8,15 @@ import lombok.NoArgsConstructor;
 @Embeddable
 @NoArgsConstructor
 public class Tag {
-    private String name;
+    private String topName;
     private int count;
 
     public static Tag of(String name, int count) {
         return new Tag(name, count);
     }
 
-    private Tag(String name, int count) {
-        this.name = name;
+    private Tag(String topName, int count) {
+        this.topName = topName;
         this.count = count;
     }
 }
