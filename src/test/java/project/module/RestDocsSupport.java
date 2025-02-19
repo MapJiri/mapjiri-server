@@ -18,8 +18,12 @@ import project.mapjiri.domain.place.controller.LocationController;
 import project.mapjiri.domain.place.service.PlaceService;
 import project.mapjiri.domain.placeStar.controller.PlaceStarController;
 import project.mapjiri.domain.placeStar.service.PlaceStarService;
+import project.mapjiri.domain.restaurant.controller.RestaurantController;
 import project.mapjiri.domain.restaurant.controller.SearchController;
+import project.mapjiri.domain.restaurant.service.RestaurantService;
 import project.mapjiri.domain.restaurant.service.SearchService;
+import project.mapjiri.domain.review.controller.ReviewController;
+import project.mapjiri.domain.review.service.ReviewService;
 import project.mapjiri.domain.user.controller.UserController;
 import project.mapjiri.domain.user.provider.JwtTokenProvider;
 import project.mapjiri.domain.user.service.MailService;
@@ -35,6 +39,8 @@ import project.mapjiri.support.config.RestDocsConfig;
         MenuStarController.class,
         MenuController.class,
         LocationController.class,
+        ReviewController.class,
+        RestaurantController.class
 })
 @AutoConfigureMockMvc
 @AutoConfigureRestDocs
@@ -79,4 +85,10 @@ public abstract class RestDocsSupport {
 
     @MockitoBean
     protected PlaceService placeService;
+
+    @MockitoBean
+    protected ReviewService reviewService;
+
+    @MockitoBean
+    protected RestaurantService restaurantService;
 }
