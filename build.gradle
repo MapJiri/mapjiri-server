@@ -76,7 +76,7 @@ tasks.named('test') {
 openapi3 {
     server = 'http://localhost:8080'
     title = 'MAPJIRI API'
-    description = 'MAJIRI API'
+    description = 'MAPJIRI API'
     version = '0.0.1'
     format = 'yaml'
 }
