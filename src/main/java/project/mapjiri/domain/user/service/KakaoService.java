@@ -65,6 +65,7 @@ public class KakaoService {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 
+        headers.add("Accept", "application/json");
         // ✅ MultiValueMap을 사용하여 올바른 요청 바디 생성
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("grant_type", "authorization_code");

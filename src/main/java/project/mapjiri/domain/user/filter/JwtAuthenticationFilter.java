@@ -21,12 +21,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         throws ServletException, IOException {
 
         String requestURI = request.getRequestURI();
-
+/*
         if (isPublicUrl(requestURI)) {
             filterChain.doFilter(request, response); // 토큰 검사 없이 진행
             return;
         }
-
+*/
         String token = request.getHeader("Authorization");
 
         if (token != null && token.startsWith("Bearer ")) {
@@ -43,8 +43,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     }
 
     private static boolean isPublicUrl(final String requestURI) {
-
-        return
-                requestURI.startsWith("/login");
+        return requestURI.startsWith("/login") ||
+                requestURI.startsWith("/api/v1/auth/kakao/callback") ||
+                requestURI.startsWith("/login/page") ||
+                requestURI.startsWith("/login/kakaologin");
     }
+
 }

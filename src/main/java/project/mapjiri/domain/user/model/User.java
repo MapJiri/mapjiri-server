@@ -24,6 +24,7 @@ public class User {
     private String email;
 
     @Column(nullable = true)
+    @Builder.Default
     private String password = "";
 
     @Column(nullable = false)

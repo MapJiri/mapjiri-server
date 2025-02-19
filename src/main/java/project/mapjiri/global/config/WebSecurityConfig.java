@@ -12,6 +12,11 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import project.mapjiri.domain.user.filter.JwtAuthenticationFilter;
 import project.mapjiri.domain.user.provider.JwtTokenProvider;
+
+import java.util.Collections;
+
+import static com.fasterxml.jackson.databind.type.LogicalType.Collection;
+
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
@@ -24,7 +29,7 @@ public class WebSecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(cors -> cors.configurationSource(request -> {
                     CorsConfiguration config = new CorsConfiguration();
-                    config.addAllowedOriginPattern("*"); // 모든 도메인 허용
+                    config.setAllowedOriginPatterns(Collections.singletonList("*")); // 모든 도메인 허용
                     config.addAllowedMethod("*"); // 모든 HTTP 메서드 허용
                     config.addAllowedHeader("*"); // 모든 헤더 허용
                     config.setAllowCredentials(true); // 쿠키 허용
@@ -34,6 +39,7 @@ public class WebSecurityConfig {
                         .requestMatchers(
                                 "/",
                                 "/login/**",
+                                "/login/page",
                                 "/login/page/**",
                                 "/api/v1/auth/kakao/callback/**",
                                 "/api/v1/auth/kakao/**",
