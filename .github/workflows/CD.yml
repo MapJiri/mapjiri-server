@@ -8,6 +8,7 @@ on:
       
 jobs:
   deploy:
+    environment: env
     # build 잡이 성공한 뒤에만 실행되도록 의존성 설정
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
