@@ -50,7 +50,7 @@ jobs:
         echo "  data:" >> src/main/resources/application.yml
         echo "    redis:" >> src/main/resources/application.yml
         echo "      host: '${{ secrets.REDIS_HOST }}'" >> src/main/resources/application.yml
-        echo "      port: '${{ secrets.REDIS_PORT }}'" >> src/main/resources/application.yml
+        echo "      port: ${{ secrets.REDIS_PORT }}" >> src/main/resources/application.yml
         
         echo "  jpa:" >> src/main/resources/application.yml
         echo "    hibernate:" >> src/main/resources/application.yml
