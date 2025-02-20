@@ -46,7 +46,7 @@ jobs:
         
         echo "  jpa:" >> src/main/resources/application.yml
         echo "    hibernate:" >> src/main/resources/application.yml
-        echo "      ddl-auto: none" >> src/main/resources/application.yml
+        echo "      ddl-auto: update" >> src/main/resources/application.yml
         echo "    show-sql: true" >> src/main/resources/application.yml
         echo "    properties:" >> src/main/resources/application.yml
         echo "      hibernate:" >> src/main/resources/application.yml
