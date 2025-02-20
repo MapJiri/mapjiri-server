@@ -1,8 +1,8 @@
-name: CD PipeLine
+name: CD
 
 on:
   workflow_run:
-    workflows: ["CI Workflow"]  # CI 워크플로우의 이름을 기입
+    workflows: ["CI"]  # CI 워크플로우의 이름을 기입
     types:
       - completed
 jobs:
