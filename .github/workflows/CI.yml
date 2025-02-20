@@ -84,7 +84,7 @@ jobs:
 
     # 3. Jacoco HTML 리포트를 GitHub Actions Artifacts로 업로드
     - name: Upload Jacoco Report as Artifact
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: jacoco-report
         path: build/reports/jacoco/test/html
