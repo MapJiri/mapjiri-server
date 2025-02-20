@@ -2,9 +2,9 @@ name: CI
 
 on:
   push:
-    branches: [ "feat/#54/CI/CD 파이프라인 구축" ]
+    branches: [ "dev" ]
   pull_request:
-    branches: [ "feat/#54/CI/CD 파이프라인 구축" ]
+    branches: [ "dev" ]
 
 jobs:
   build:
