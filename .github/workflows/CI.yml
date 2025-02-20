@@ -77,7 +77,10 @@ jobs:
         echo "  api:" >> src/main/resources/application.yml
         echo "    key: '${{ secrets.KAKAO_API_KEY }}'" >> src/main/resources/application.yml
         echo "application.yml 생성 완료"
-        
+  
+    - name: Debug - Print application.yml
+      run: cat src/main/resources/application.yml
+      
     # 2. Build 및 Jacoco 리포트 생성
     - name: Build and Test with Jacoco
       run: ./gradlew clean build test jacocoTestReport
